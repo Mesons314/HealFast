@@ -1,4 +1,4 @@
-package com.HealQueue.DTO;
+package com.HealQueue.Auth.DTO;
 
 public class AuthResponse {
     private String userName;

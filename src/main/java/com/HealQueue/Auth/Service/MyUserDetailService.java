@@ -1,17 +1,17 @@
-package com.HealQueue.Service;
+package com.HealQueue.Auth.Service;
 
-import com.HealQueue.Entity.UserInfo;
-import com.HealQueue.Entity.UserPrinciple;
-import com.HealQueue.Repository.UserRepo;
+import com.HealQueue.Auth.Entity.UserInfo;
+import com.HealQueue.Auth.Entity.UserPrinciple;
+import com.HealQueue.Auth.Repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
+@Qualifier("userDetail")
 public class MyUserDetailService implements UserDetailsService {
 
     @Autowired
@@ -26,3 +26,4 @@ public class MyUserDetailService implements UserDetailsService {
         return new UserPrinciple(user);
     }
 }
+

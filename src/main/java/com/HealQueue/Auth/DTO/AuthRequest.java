@@ -1,10 +1,10 @@
-package com.HealQueue.DTO;
+package com.HealQueue.Auth.DTO;
 
 public class AuthRequest {
     private String userName;
     private String password;
 
-    public AuthRequest(String password, String userName) {
+    public AuthRequest(String userName,String password) {
         this.password = password;
         this.userName = userName;
     }

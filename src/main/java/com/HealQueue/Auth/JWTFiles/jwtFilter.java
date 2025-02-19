@@ -1,23 +1,23 @@
-package com.HealQueue.JWTFiles;
+package com.HealQueue.Auth.JWTFiles;
 
-
-import com.HealQueue.Service.MyUserDetailService;
-import com.HealQueue.Service.jwtService;
+import com.HealQueue.Auth.Service.MyUserDetailService;
+import com.HealQueue.Auth.Service.jwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.List;
 
 @Component
 public class jwtFilter extends OncePerRequestFilter {
@@ -26,9 +26,12 @@ public class jwtFilter extends OncePerRequestFilter {
     private jwtService JwtService;
 
     @Autowired
-    ApplicationContext context;
+    private ApplicationContext context;
+
     @Autowired
-    private UserDetailsService userDetailsService;
+    @Qualifier("userDetail")
+    private MyUserDetailService myUserDetailService;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String authHeader = request.getHeader("Authorization");
@@ -40,13 +43,19 @@ public class jwtFilter extends OncePerRequestFilter {
             username = JwtService.extractUserName(token);
         }
 
-        UserDetails userDetails = context.getBean(MyUserDetailService.class).loadUserByUsername(username);
         if(username != null && SecurityContextHolder.getContext().getAuthentication()== null){
-            if(JwtService.validateToken(token, userDetails)){
+
+            UserDetails userDetails = null;
+
+                userDetails = myUserDetailService.loadUserByUsername(username);
+
+
+            if(userDetails != null && JwtService.validateToken(token, userDetails)){
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails,null,userDetails.getAuthorities());
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }
+
         }
         filterChain.doFilter(request,response);
     }
@@ -54,7 +63,7 @@ public class jwtFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getRequestURI();
-        return path.equals("/api/register") || path.equals("/api/login");
+        return path.equals("/api/login") || path.equals("/api/user/register") || path.equals("/api/clinic/register");
     }
 
 }

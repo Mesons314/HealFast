@@ -1,15 +1,10 @@
-package com.HealQueue.Controller;
+package com.HealQueue.Auth.Controller;
 
-import com.HealQueue.DTO.AuthRequest;
-import com.HealQueue.DTO.AuthResponse;
-import com.HealQueue.Entity.UserInfo;
-import com.HealQueue.Repository.UserRepo;
-import com.HealQueue.Service.MyUserDetailService;
-import com.HealQueue.Service.UserServicing;
-import jdk.dynalink.linker.LinkerServices;
+import com.HealQueue.Auth.DTO.AuthRequest;
+import com.HealQueue.Auth.Entity.Role;
+import com.HealQueue.Auth.Entity.UserInfo;
+import com.HealQueue.Auth.Service.UserServicing;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,19 +12,18 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api")
-public class AuthenticationController {
+public class UserController {
 
     @Autowired
     private UserServicing service;
 
-    @Autowired
-    private UserRepo repo;
-
-
-
-    @PostMapping("/register")
+    @PostMapping("/user/register")
     public UserInfo registerUser(@RequestBody UserInfo user){
-        return service.register(user);
+        return service.register(user, Role.USER);
+    }
+    @PostMapping("/clinic/register")
+    public UserInfo registerClinic(@RequestBody UserInfo user){
+        return service.register(user, Role.DOCTOR);
     }
 
     @PostMapping("/login")
