@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.util.*;
 import java.util.function.Function;
 
@@ -18,16 +19,15 @@ public class JWTService {
 
     private final String secretKey;
 
-    public JWTService(){
-        KeyGenerator keyGen = null;
-        try {
-            keyGen=  KeyGenerator.getInstance("HmacSHA256");
-            SecretKey sk = keyGen.generateKey();
-            secretKey = Base64.getUrlEncoder().withoutPadding().encodeToString(sk.getEncoded());
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        }
+    public JWTService() {
+        this.secretKey = generateSecretKey();  // Using a proper secret key
+    }
 
+    private String generateSecretKey() {
+        SecureRandom random = new SecureRandom();
+        byte[] keyBytes = new byte[32]; // 256-bit key
+        random.nextBytes(keyBytes);
+        return Base64.getUrlEncoder().encodeToString(keyBytes);
     }
 
     public String generateToken(String username){
@@ -42,9 +42,9 @@ public class JWTService {
                 .compact();
     }
 
-    public SecretKey getKey(){
-        byte[] KeyBytes = Base64.getDecoder().decode(secretKey);
-        return Keys.hmacShaKeyFor(KeyBytes);
+    private SecretKey getKey() {
+        byte[] keyBytes = Base64.getDecoder().decode(secretKey);
+        return Keys.hmacShaKeyFor(keyBytes);
     }
 
     public String extractUserName(String token){
