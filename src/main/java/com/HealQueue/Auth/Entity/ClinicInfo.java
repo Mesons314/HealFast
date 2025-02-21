@@ -5,19 +5,20 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "Gawade")
-public class UserInfo {
+@Table(name = "Yash")
+public class ClinicInfo {
 
     @Id
     private long id;
     private String userName;
     private String password;
     private String address;
+    private String graduationDegree;
     private String firstName;
     private String lastName;
-    private String dob;
+    private String speciality;
 
-    public UserInfo() {
+    public ClinicInfo() {
     }
 
     public String getAddress() {
@@ -28,20 +29,20 @@ public class UserInfo {
         this.address = address;
     }
 
-    public String getDob() {
-        return dob;
-    }
-
-    public void setDob(String dob) {
-        this.dob = dob;
-    }
-
     public String getFirstName() {
         return firstName;
     }
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;
+    }
+
+    public String getGraduationDegree() {
+        return graduationDegree;
+    }
+
+    public void setGraduationDegree(String graduationDegree) {
+        this.graduationDegree = graduationDegree;
     }
 
     public long getId() {
@@ -60,12 +61,12 @@ public class UserInfo {
         this.lastName = lastName;
     }
 
-    public String getPassword() {
-        return password;
+    public String getSpeciality() {
+        return speciality;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setSpeciality(String speciality) {
+        this.speciality = speciality;
     }
 
     public String getUserName() {
@@ -74,5 +75,13 @@ public class UserInfo {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }
