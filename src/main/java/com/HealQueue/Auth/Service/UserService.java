@@ -3,6 +3,7 @@ package com.HealQueue.Auth.Service;
 import com.HealQueue.Auth.DTO.AuthRequest;
 import com.HealQueue.Auth.Entity.UserInfo;
 import com.HealQueue.Auth.Repository.UserRepo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -15,12 +16,16 @@ import java.util.List;
 @Service
 public class UserService {
 
+    @Autowired
     private final JWTService jwtService;
 
+    @Autowired
     private final AuthenticationManager authManager;
 
+    @Autowired
     private final PasswordEncoder passwordEncoder;
 
+    @Autowired
     private final UserRepo repo;
 
     public UserService(AuthenticationManager authManager, JWTService jwtService, PasswordEncoder passwordEncoder, UserRepo repo) {
@@ -53,5 +58,13 @@ public class UserService {
 
     public List<UserInfo> getAllUser() {
         return repo.findAll();
+    }
+
+    public String getOnlyUserName(long id) {
+        return repo.findUserNameById(id);
+    }
+
+    public UserInfo findUserData(long id) {
+        return repo.findById(id).orElse(null);
     }
 }

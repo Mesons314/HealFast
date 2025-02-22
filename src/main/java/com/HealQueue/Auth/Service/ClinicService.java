@@ -3,6 +3,7 @@ package com.HealQueue.Auth.Service;
 import com.HealQueue.Auth.DTO.AuthRequest;
 import com.HealQueue.Auth.Entity.ClinicInfo;
 import com.HealQueue.Auth.Repository.ClinicRepo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -15,11 +16,15 @@ import java.util.List;
 @Service
 public class ClinicService {
 
+    @Autowired
     private final PasswordEncoder passwordEncoder;
 
+    @Autowired
     private final JWTService jwtService;
 
+    @Autowired
     private final AuthenticationManager authManager;
+    @Autowired
     private final ClinicRepo repo;
 
     public ClinicService(AuthenticationManager authManager, JWTService jwtService, PasswordEncoder passwordEncoder, ClinicRepo repo) {
@@ -52,5 +57,9 @@ public class ClinicService {
 
     public List<ClinicInfo> getClinic() {
         return repo.findAll();
+    }
+
+    public ClinicInfo findById(long id) {
+        return repo.findById(id).orElse(null);
     }
 }
