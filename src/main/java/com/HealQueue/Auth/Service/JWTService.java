@@ -19,39 +19,42 @@ public class JWTService {
 
     private final String secretKey;
 
-    public JWTService() {
-        this.secretKey = generateSecretKey();  // Using a proper secret key
-    }
+    public JWTService()  {
 
-    private String generateSecretKey() {
-        SecureRandom random = new SecureRandom();
-        byte[] keyBytes = new byte[32]; // 256-bit key
-        random.nextBytes(keyBytes);
-        return Base64.getUrlEncoder().encodeToString(keyBytes);
-    }
+        KeyGenerator keyGen = null;
+        try {
+            keyGen = KeyGenerator.getInstance("HmacSHA256");
+            SecretKey sk = keyGen.generateKey();
+            secretKey = Base64.getEncoder().encodeToString(sk.getEncoded());
 
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+    }
     public String generateToken(String username){
-        Map<String , Object> claims = new HashMap<>();
+        Map<String ,Object> claims = new HashMap<>();
+
         return Jwts.builder()
                 .claims()
+                .add(claims)
                 .subject(username)
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis()+ 1000*30*30))
+                .expiration(new Date(System.currentTimeMillis()+1000*60*30))
                 .and()
                 .signWith(getKey())
                 .compact();
     }
 
-    private SecretKey getKey() {
-        byte[] keyBytes = Base64.getDecoder().decode(secretKey);
-        return Keys.hmacShaKeyFor(keyBytes);
+    private SecretKey getKey(){
+        byte[] KeyBytes = Decoders.BASE64.decode(secretKey);
+        return Keys.hmacShaKeyFor(KeyBytes);
     }
 
-    public String extractUserName(String token){
-        return extractClaims(token , Claims::getSubject);
+    public String extractUserName(String token) {
+        return extractClaim(token, Claims::getSubject);
     }
 
-    private <T> T extractClaims(String token, Function<Claims ,T> claimResolver) {
+    private <T> T extractClaim(String token, Function<Claims ,T>claimResolver) {
         final Claims claims = extractAllClaims(token);
         return claimResolver.apply(claims);
     }
@@ -64,10 +67,9 @@ public class JWTService {
                 .getPayload();
     }
 
-    public boolean validateToken(String token, UserDetails userDetails){
-        final String username = extractUserName(token);
-        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
-
+    public boolean validateToken(String token, UserDetails userDetails) {
+        final String userName = extractUserName(token);
+        return (userName.equals(userDetails.getUsername())&& !isTokenExpired(token));
     }
 
     private boolean isTokenExpired(String token) {
@@ -75,6 +77,6 @@ public class JWTService {
     }
 
     private Date extractExpiration(String token) {
-        return extractClaims(token,Claims::getExpiration);
+        return extractClaim(token,Claims::getExpiration);
     }
 }
