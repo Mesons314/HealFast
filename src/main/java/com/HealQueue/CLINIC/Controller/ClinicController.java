@@ -19,14 +19,18 @@ public class ClinicController {
 
     @Autowired
     private ClinicService clinicService;
-    @GetMapping("/clinicData")
-    public String getDataById(){
-        return "";
-    }
 
     @GetMapping("/clinicData/{id}")
-    public ResponseEntity<List<ClinicInfo>> getClinicList(){
-        return new ResponseEntity<>(clinicService.getClinic(), HttpStatus.OK);
+    public ResponseEntity<ClinicResponse> getDataById(@PathVariable long id){
+        ClinicInfo clinicInfo = clinicService.findByData(id);
+        try {
+            if(clinicInfo != null){
+                return ResponseEntity.ok(new ClinicResponse(clinicInfo));
+            }
+            throw new RuntimeException("Not Found");
+        } catch (RuntimeException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

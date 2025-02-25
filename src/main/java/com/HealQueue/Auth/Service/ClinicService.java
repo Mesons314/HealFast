@@ -62,4 +62,8 @@ public class ClinicService {
     public ClinicInfo findById(long id) {
         return repo.findById(id).orElse(null);
     }
+
+    public ClinicInfo findByData(long id) {
+        return repo.findById(id).orElse(null);
+    }
 }
