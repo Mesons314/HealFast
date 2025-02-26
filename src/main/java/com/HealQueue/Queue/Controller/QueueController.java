@@ -5,14 +5,11 @@ import com.HealQueue.Queue.Service.QueueService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/queue")
-public class QueueAdd {
+public class QueueController {
 
     @Autowired
     private QueueService queueService;
@@ -25,5 +22,15 @@ public class QueueAdd {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<?> deleteQueue(@PathVariable long id){
+        AppointmentBooking appointmentBooking = queueService.getQueueById(id);
+        if(appointmentBooking!=null){
+            queueService.deleteProduct((int) id);
+            return new ResponseEntity<>("Deletd",HttpStatus.OK);
+        }
+        return new ResponseEntity<>("Queue Does Not Exist",HttpStatus.NOT_FOUND);
     }
 }
