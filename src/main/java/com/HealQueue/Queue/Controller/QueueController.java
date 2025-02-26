@@ -29,7 +29,7 @@ public class QueueController {
         AppointmentBooking appointmentBooking = queueService.getQueueById(id);
         if(appointmentBooking!=null){
             queueService.deleteProduct((int) id);
-            return new ResponseEntity<>("Deletd",HttpStatus.OK);
+            return new ResponseEntity<>("Deleted",HttpStatus.OK);
         }
         return new ResponseEntity<>("Queue Does Not Exist",HttpStatus.NOT_FOUND);
     }
