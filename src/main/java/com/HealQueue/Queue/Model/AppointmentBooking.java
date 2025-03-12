@@ -13,24 +13,36 @@ public class AppointmentBooking {
 
     @Id
     @Column(nullable = false,unique = true)
-    private Integer id;
+    private long id;
 
     private String patientName;
     private String patientAge;
     private String patientGender;
     private String mobileNo;
     private LocalDateTime registeredAt;
+    private Integer patientNo;
+    public AppointmentBooking() {
 
-    public AppointmentBooking(String mobileNo, Integer id, String patientAge, String patientGender, String patientName, LocalDateTime registeredAt) {
+    }
+
+
+    public AppointmentBooking(Integer patientNo,String mobileNo, Integer id, String patientAge, String patientGender, String patientName, LocalDateTime registeredAt) {
         this.mobileNo = mobileNo;
         this.id = id;
         this.patientAge = patientAge;
         this.patientGender = patientGender;
         this.patientName = patientName;
         this.registeredAt = registeredAt;
+        this.patientNo = patientNo;
     }
 
-    public AppointmentBooking() {
+
+    public Integer getPatientNo() {
+        return patientNo;
+    }
+
+    public void setPatientNo(Integer patientNo) {
+        this.patientNo = patientNo;
     }
 
     public LocalDateTime getRegisteredAt() {
@@ -41,7 +53,7 @@ public class AppointmentBooking {
         this.registeredAt = registeredAt;
     }
 
-    public Integer getId() {
+    public long getId() {
         return id;
     }
 
