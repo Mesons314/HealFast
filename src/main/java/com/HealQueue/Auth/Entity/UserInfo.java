@@ -13,11 +13,20 @@ public class UserInfo {
     private String userName;
     private String password;
     private String address;
+    private String gender;
     private String firstName;
     private String lastName;
     private String dob;
 
     public UserInfo() {
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 
     public String getAddress() {

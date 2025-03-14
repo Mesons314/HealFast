@@ -9,8 +9,10 @@ public class UserResponse {
     private String firstName;
     private String lastName;
     private String dob;
+    private String gender;
 
     public UserResponse(UserInfo userInfo) {
+        this.gender = userInfo.getGender();
         this.address = userInfo.getAddress();
         this.dob = userInfo.getDob();
         this.firstName = userInfo.getFirstName();
@@ -57,4 +59,10 @@ public class UserResponse {
     public void setUserName(String userName) {
         this.userName = userName;
     }
+
+    public void setGender(String gender){ this.gender = gender;}
+
+    public String getGender(){return gender;}
+
+
 }

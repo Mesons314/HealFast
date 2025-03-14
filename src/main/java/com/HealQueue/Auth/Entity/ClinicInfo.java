@@ -17,8 +17,53 @@ public class ClinicInfo {
     private String firstName;
     private String lastName;
     private String speciality;
+    private String gender;
+    private String dob;
+    private String clinicName;
+    private String phoneNo;
+    private String clinicPhoneNo;
 
     public ClinicInfo() {
+    }
+
+    public String getClinicName() {
+        return clinicName;
+    }
+
+    public String getClinicPhoneNo() {
+        return clinicPhoneNo;
+    }
+
+    public void setClinicPhoneNo(String clinicPhoneNo) {
+        this.clinicPhoneNo = clinicPhoneNo;
+    }
+
+    public void setClinicName(String clinicName) {
+        this.clinicName = clinicName;
+    }
+
+    public String getDob() {
+        return dob;
+    }
+
+    public void setDob(String dob) {
+        this.dob = dob;
+    }
+
+    public String getPhoneNo() {
+        return phoneNo;
+    }
+
+    public void setPhoneNo(String phoneNo) {
+        this.phoneNo = phoneNo;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 
     public String getAddress() {

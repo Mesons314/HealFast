@@ -7,12 +7,23 @@ public class ClinicResponse {
 
     private String userName;
     private String password;
-    private String address;
+
+    private String gender;
+    private String dob;
+
     private String graduationDegree;
     private String firstName;
     private String lastName;
     private String speciality;
+    private String clinicName;
+    private String address;
+    private String clinicPhoneNo;
+
     public ClinicResponse(ClinicInfo clinicInfo){
+        this.clinicPhoneNo = clinicInfo.getClinicPhoneNo();
+        this.dob = clinicInfo.getDob();
+        this.gender = clinicInfo.getGender();
+        this.clinicName = clinicInfo.getClinicName();
         this.userName =  clinicInfo.getUserName();
          this.address = clinicInfo.getAddress();
          this.graduationDegree = clinicInfo.getGraduationDegree();
