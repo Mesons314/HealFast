@@ -1,9 +1,11 @@
 package com.HealQueue.Auth.Service;
 
+import com.HealQueue.Auth.Entity.UserPrincipal;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -31,13 +33,17 @@ public class JWTService {
             throw new RuntimeException(e);
         }
     }
-    public String generateToken(String username){
+    public String generateToken(UserPrincipal userPrincipal){
         Map<String ,Object> claims = new HashMap<>();
+        claims.put("role", userPrincipal.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .findFirst()
+                .orElse("ROLE_USER"));
 
         return Jwts.builder()
                 .claims()
                 .add(claims)
-                .subject(username)
+                .subject(userPrincipal.getUsername())
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis()+1000*60*30))
                 .and()

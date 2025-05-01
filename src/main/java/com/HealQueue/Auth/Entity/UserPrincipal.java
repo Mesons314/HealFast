@@ -17,14 +17,14 @@ public class UserPrincipal implements UserDetails {
     public UserPrincipal(UserInfo userInfo) {
         this.username = userInfo.getUserName();
         this.password = userInfo.getPassword();
-        this.authorities = List.of(new SimpleGrantedAuthority("ROLE_USER")); // Assign role
+        this.authorities = List.of(new SimpleGrantedAuthority("ROLE_"+userInfo.getRole())); // Assign role
     }
 
     // Constructor for ClinicInfo (Doctor)
     public UserPrincipal(ClinicInfo clinicInfo) {
         this.username = clinicInfo.getUserName();
         this.password = clinicInfo.getPassword();
-        this.authorities = List.of(new SimpleGrantedAuthority("ROLE_DOCTOR")); // Assign role
+        this.authorities = List.of(new SimpleGrantedAuthority("ROLE_"+clinicInfo.getRole())); // Assign role
     }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
