@@ -1,8 +1,5 @@
 package com.HealQueue.Auth.Service;
 
-
-
-
 import com.HealQueue.Auth.Entity.ClinicInfo;
 import com.HealQueue.Auth.Entity.UserInfo;
 import com.HealQueue.Auth.Entity.UserPrincipal;

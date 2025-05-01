@@ -60,13 +60,13 @@ public class AuthController {
         }
     }
 
-    @GetMapping("/get/user")
+    @GetMapping("/user/get")
     public ResponseEntity<List<UserInfo>> getAllData(){
         List<UserInfo> user =  userService.getAllUser();
         return new ResponseEntity<>(user,HttpStatus.OK);
     }
 
-    @GetMapping("/get/clinic")
+    @GetMapping("/clinic/get")
     public ResponseEntity<List<ClinicInfo>> getAllClinic(){
         List<ClinicInfo> clinicInfos = clinicService.getClinic();
         return new ResponseEntity<>(clinicInfos,HttpStatus.OK);
