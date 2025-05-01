@@ -17,6 +17,7 @@ public class UserInfo {
     private String firstName;
     private String lastName;
     private String dob;
+    private String role;
 
     public UserInfo() {
     }
@@ -47,6 +48,14 @@ public class UserInfo {
 
     public String getFirstName() {
         return firstName;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 
     public void setFirstName(String firstName) {

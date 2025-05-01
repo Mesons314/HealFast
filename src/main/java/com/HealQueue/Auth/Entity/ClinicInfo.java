@@ -22,6 +22,7 @@ public class ClinicInfo {
     private String clinicName;
     private String phoneNo;
     private String clinicPhoneNo;
+    private String role;
 
     public ClinicInfo() {
     }
@@ -52,6 +53,14 @@ public class ClinicInfo {
 
     public String getPhoneNo() {
         return phoneNo;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 
     public void setPhoneNo(String phoneNo) {
