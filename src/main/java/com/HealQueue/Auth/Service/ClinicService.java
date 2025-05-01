@@ -2,6 +2,7 @@ package com.HealQueue.Auth.Service;
 
 import com.HealQueue.Auth.DTO.AuthRequest;
 import com.HealQueue.Auth.Entity.ClinicInfo;
+import com.HealQueue.Auth.Entity.UserPrincipal;
 import com.HealQueue.Auth.Repository.ClinicRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -50,7 +51,9 @@ public class ClinicService {
         Authentication authentication = authManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUserName(),request.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         if(authentication.isAuthenticated()){
-            return jwtService.generateToken(request.getUserName());
+//            return jwtService.generateToken(request.getUserName());
+            UserPrincipal userPrincipal = new UserPrincipal(clinicInfo);
+            return jwtService.generateToken(userPrincipal);
         }
         return "Fail";
     }
