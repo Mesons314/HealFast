@@ -8,11 +8,12 @@ class UserModel{
   String? firstName;
   String? lastName;
   String? address;
+  String? phoneNo;
   String? role;
   Long? id;
 
   UserModel({required this.userName,required this.gender,required this.dob,required this.password,required this.firstName,
-    required this.lastName,required this.address,this.id, required this.role});
+    required this.lastName,required this.address,this.id, required this.role, required this.phoneNo});
 
   factory UserModel.fromJson(Map<String , dynamic> json){
     return UserModel(
@@ -23,6 +24,7 @@ class UserModel{
         firstName: json['firstName'],
         lastName: json['lastName'],
         address : json['address'],
+        phoneNo: json['phoneNo'],
         role: json['role']
     );
   }
@@ -35,5 +37,6 @@ class UserModel{
      'firstName': firstName,
      'lastName': lastName,
      'dob': dob,
+     'phoneNo': phoneNo
   };
 }
