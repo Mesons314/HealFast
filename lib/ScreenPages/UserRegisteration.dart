@@ -4,8 +4,6 @@ import 'package:healfast01/API/UserAPI.dart';
 import 'package:healfast01/BottomNav/BottomNavigation.dart';
 import 'package:healfast01/utils/text_editing_controller.dart';
 import 'package:healfast01/widgets/textField/text_field.dart';
-import 'package:healfast01/widgets/textField/text_field3.dart';
-import 'package:healfast01/widgets/textField/text_field4.dart';
 
 import '../Models/userModel.dart';
 
@@ -88,7 +86,7 @@ class userRegisteration extends State<UserRegisteration>{
                          onTap: () async{
                            DateTime now = DateTime.now();
                            DateTime lastDate = DateTime(2025,12,31);
-                 
+
                            DateTime? picked = await showDatePicker(
                                context: context,
                                initialDate: now.isAfter(lastDate)?lastDate: now,
@@ -153,8 +151,9 @@ class userRegisteration extends State<UserRegisteration>{
 
             Padding(padding: EdgeInsets.only(left: 11,right: 11),
             child: Container(
-              child: CustomTextField4(
-                  passwordVisible: true,
+              child: CustomTextField(
+                  isPassword: true,
+                  showSuffixIcon: true,
                   hintText: 'Password',
                   textEditingController: controller.password,
                   textInputType: TextInputType.text
@@ -167,7 +166,7 @@ class userRegisteration extends State<UserRegisteration>{
             ),
             Padding(padding: const EdgeInsets.only(left: 10,right: 10),
               child: Container(
-                child: CustomTextField3(
+                child: CustomTextField(
                     MaxLines: null,
                     hintText: 'Address',
                     textEditingController: controller.address,
@@ -212,6 +211,9 @@ class userRegisteration extends State<UserRegisteration>{
                   ),
                   onPressed: () async{
                     try{
+                      print(controller.username.text);
+                      print(controller.firstName.text);
+                      print(controller.lastName.text);
                       UserModel user = UserModel(
                           userName:controller.username.text,
                           gender: controller.gender,
@@ -220,7 +222,8 @@ class userRegisteration extends State<UserRegisteration>{
                           firstName:controller.firstName.text,
                           lastName: controller.lastName.text,
                           address: controller.address.text,
-                          role: controller.role.text
+                          role: controller.role.text,
+                          phoneNo: controller.phoneNo.text
                       );
                       await repo.addUser(user);
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Added successfully")));

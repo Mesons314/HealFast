@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:healfast01/Routes/RoutesName.dart';
 import 'package:healfast01/ScreenPages/Clinic.dart';
 import 'package:healfast01/ScreenPages/Profile.dart';
 
@@ -43,7 +44,7 @@ class homepage extends State<HomePage>{
                     ),
                     InkWell(
                         onTap: (){
-                          Navigator.push(context, MaterialPageRoute(builder: (context)=>Profile()));
+                          Navigator.pushNamed(context,RoutesName.profilePage);
                         },
                         child: const Text('Profile')
                     )
@@ -62,7 +63,7 @@ class homepage extends State<HomePage>{
                 ),
                 ListTile(
                   onTap: (){
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=>Clinic()));
+                    Navigator.pushNamed(context, RoutesName.clinicName);
                   },
                   title: const Text('Clinics'),
                   leading: const Icon(Icons.local_hospital),

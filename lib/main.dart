@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:healfast01/ScreenPages/DoctorsRegisterationPage.dart';
-import 'package:healfast01/ScreenPages/Login.dart';
+import 'package:healfast01/Routes/RoutesName.dart';
 import 'package:healfast01/ScreenPages/Splash_Screen.dart';
-import 'package:healfast01/ScreenPages/UserRegisteration.dart';
-import 'package:healfast01/BottomNav/BottomNavigation.dart';
+import 'Routes/Routes.dart';
 
 void main() {
   runApp(const MyApp());
@@ -22,7 +20,9 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
-      home: SplashScreen(),
+      initialRoute: RoutesName.splashScreen,
+      onGenerateRoute: Routes.generateRoute,
+      home: const SplashScreen(),
     );
   }
 }
@@ -55,12 +55,12 @@ class _MyHomePageState extends State<MyHomePage> {
             Padding(
               padding: const EdgeInsets.only(bottom: 80),
               child: Container(
-                margin: EdgeInsets.all(11),
+                margin: const EdgeInsets.all(11),
                 width: 200,
                 height: 200,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                     color: Colors.green,
-                    borderRadius: const BorderRadius.all(Radius.circular(15)),
+                    borderRadius: BorderRadius.all(Radius.circular(15)),
                     boxShadow: [
                       BoxShadow(
                         blurRadius: 6,
@@ -82,7 +82,7 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Padding(
                 padding: const EdgeInsets.only(bottom: 20),
                 child: ElevatedButton(onPressed: (){
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => UserRegisteration()));
+                  Navigator.pushNamed(context,RoutesName.userRegister);
                 },style: ElevatedButton.styleFrom(
                     elevation: 10,
                     shadowColor: Colors.black
@@ -95,7 +95,7 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Padding(
                 padding: const EdgeInsets.only(bottom: 20),
                 child: ElevatedButton(onPressed: (){
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => DoctorsRegisterationPage()));
+                  Navigator.pushNamed(context, RoutesName.clinicRegister);
                 },style: ElevatedButton.styleFrom(
                     elevation: 10,
                     shadowColor: Colors.black
@@ -107,10 +107,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
             InkWell(
               onTap: (){
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context)=> Login()));
+                Navigator.pushNamed(context,
+                    RoutesName.login);
               },
-              child: Text("Allready A User",
+              child: const Text("Allready A User",
                 selectionColor: Colors.blue,
                 style: TextStyle(
                     fontSize: 20,

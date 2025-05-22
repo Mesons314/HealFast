@@ -1,11 +1,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:healfast01/BottomNav/BottomNavigation.dart';
+import 'package:healfast01/Routes/RoutesName.dart';
 import 'package:healfast01/ScreenPages/HomePage.dart';
 import 'package:healfast01/utils/text_editing_controller.dart';
 import 'package:healfast01/widgets/textField/text_field.dart';
-import 'package:healfast01/widgets/textField/text_field2.dart';
-import 'package:healfast01/widgets/textField/text_field3.dart';
 
 
 class DoctorsRegisterationPage extends StatefulWidget{
@@ -62,7 +61,7 @@ class doctorsRegister extends State<DoctorsRegisterationPage>{
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(22)
                     ),
-                    child: DropdownMenu<String>(
+                    child: const DropdownMenu<String>(
                         hintText: 'Gender',
                         requestFocusOnTap: true,
                         dropdownMenuEntries: <DropdownMenuEntry<String>>[
@@ -102,7 +101,7 @@ class doctorsRegister extends State<DoctorsRegisterationPage>{
                           hintText: "DOB",
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide(
+                            borderSide: const BorderSide(
                               color: Colors.lightBlueAccent
                             )
                           )
@@ -118,44 +117,30 @@ class doctorsRegister extends State<DoctorsRegisterationPage>{
               height: 10,
             ),
             Padding(padding: const EdgeInsets.only(left: 10,right: 10),
-              child: Container(
-                child: CustomTextField(
-                    hintText: 'Phone No',
-                    textEditingController: controller.phoneNo,
-                    textInputType: TextInputType.phone
-                )
+              child: CustomTextField(
+                  hintText: 'Phone No',
+                  textEditingController: controller.phoneNo,
+                  textInputType: TextInputType.phone
               ),
             ),
         
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
 
-            Padding(padding: EdgeInsets.only(left: 11,right: 11),
-            child: Container(
-              child: TextField(
-                obscureText: passwordVisible1,
-                decoration: InputDecoration(
-                  hintText: 'Password',
-                  suffixIcon: IconButton(icon: Icon(passwordVisible1?
-                  Icons.visibility
-                  :Icons.visibility_off),
-                      onPressed: (){
-                        setState(() {
-                          passwordVisible1 = !passwordVisible1;
-                        });
-                      }
-                      ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12)
-                  )
-                ),
-              ),
-            ),
+            Padding(padding: const EdgeInsets.only(left: 11,right: 11),
+            child: CustomTextField(
+              isPassword: true,
+              showSuffixIcon: true,
+              hintText: 'Password',
+              textEditingController: controller.password,
+              textInputType: TextInputType.text,
+            )
+
             ),
             Container(
-              margin: EdgeInsets.only(top: 15,bottom: 12),
-              child: Divider(
+              margin: const EdgeInsets.only(top: 15,bottom: 12),
+              child: const Divider(
                 thickness: 2,
                 color: Colors.black,
                 indent: 10,
@@ -164,112 +149,98 @@ class doctorsRegister extends State<DoctorsRegisterationPage>{
             ),
             Center(
                   child: Container(
-                    margin: EdgeInsets.only(bottom: 10),
-                      child: Text(
+                    margin: const EdgeInsets.only(bottom: 10),
+                      child: const Text(
                         'Clinic Info', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),textAlign: TextAlign.center,)
                   ),
             ),
         
             Padding(
-                padding: EdgeInsets.only(left: 10,right: 10),
-              child: Container(
-                child: CustomTextField2(
-                    hintText:"Name of the Clinic",
-                    textEditingController: controller.clinicName,
-                )
+                padding: const EdgeInsets.only(left: 10,right: 10),
+              child: CustomTextField(
+                  hintText:"Name of the Clinic",
+                  textEditingController: controller.clinicName,
               ),
             ),
         
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
 
-        Padding(padding: EdgeInsets.only(right: 11,left: 11),
-        child: Container(
-          child: CustomTextField2(
-              hintText: 'First Name',
-              textEditingController: controller.firstName
-          )
+        Padding(padding: const EdgeInsets.only(right: 11,left: 11),
+        child: CustomTextField(
+            hintText: 'First Name',
+            textEditingController: controller.firstName
         ),
         ),
 
-        SizedBox(
+        const SizedBox(
           height: 10,
         ),
 
-        Padding(padding: EdgeInsets.only(left: 11,right: 11),
-        child: Container(
-          child: CustomTextField2(
-            hintText: 'Last Name',
-            textEditingController: controller.lastName
-        )
+        Padding(padding: const EdgeInsets.only(left: 11,right: 11),
+        child: CustomTextField(
+          hintText: 'Last Name',
+          textEditingController: controller.lastName
+                ),
         ),
-        ),
-        SizedBox(
+        const SizedBox(
           height: 10,
         ),
         
-        Padding(padding: EdgeInsets.only(left: 11,right: 11),
-        child: Container(
-            child: CustomTextField2(
-                hintText: 'Degree',
-                textEditingController: controller.degree
-            )
+        Padding(padding: const EdgeInsets.only(left: 11,right: 11),
+        child: CustomTextField(
+            hintText: 'Degree',
+            textEditingController: controller.degree
         ),
         ),
 
-        SizedBox(
+        const SizedBox(
           height: 10,
         ),
-        Padding(padding: EdgeInsets.only(left: 11,right: 11),
-        child: Container(
-            child: CustomTextField2(
-                hintText: 'Speciality',
-                textEditingController: controller.speciality
-            )
+        Padding(padding: const EdgeInsets.only(left: 11,right: 11),
+        child: CustomTextField(
+            hintText: 'Speciality',
+            textEditingController: controller.speciality
         ),
         ),
-        SizedBox(
+        const SizedBox(
           height: 10,
         ),
             Padding(
-              padding: EdgeInsets.only(left: 10,right: 10),
-              child: Container(
-                child: CustomTextField3(
-                    MaxLines: null,
-                    hintText: 'Address',
-                    textEditingController: controller.address,
-                    textInputType: TextInputType.text
-                )
+              padding: const EdgeInsets.only(left: 10,right: 10),
+              child: CustomTextField(
+                  MaxLines: null,
+                  hintText: 'Address',
+                  textEditingController: controller.address,
+                  textInputType: TextInputType.text
               ),
             ),
 
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             
             Padding(
-              padding: EdgeInsets.only(left: 10,right: 10),
-              child: Container(
-                child: CustomTextField(
-                    hintText: 'Clinic Phone No',
-                    textEditingController: controller.ClinicPhoneNo,
-                    textInputType: TextInputType.phone
-                )
+              padding: const EdgeInsets.only(left: 10,right: 10),
+              child: CustomTextField(
+                  hintText: 'Clinic Phone No',
+                  textEditingController: controller.ClinicPhoneNo,
+                  textInputType: TextInputType.phone
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             Padding(
-                padding: EdgeInsets.only(left: 10,right: 10),
+                padding: const EdgeInsets.only(left: 10,right: 10),
                 child: CustomTextField(
                     hintText: 'CLINIC',
                     textEditingController: controller.role,
                     textInputType: TextInputType.text
                 )
             ),
-            SizedBox(
+            const SizedBox(
               height: 30,
             ),
             Center(
@@ -284,11 +255,11 @@ class doctorsRegister extends State<DoctorsRegisterationPage>{
                     ),
                     onPressed: () {
                       try{
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=> BottomNavigation()));
+                      Navigator.pushNamed(context, RoutesName.bottomNavigation);
                       }catch(e){
                       }
                     },
-                    child: Text(
+                    child: const Text(
                       'Submit',
                       style: TextStyle(fontSize: 20),
                       textAlign: TextAlign.center, // Center text within the button
@@ -296,7 +267,7 @@ class doctorsRegister extends State<DoctorsRegisterationPage>{
                   )
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             )
           ],
