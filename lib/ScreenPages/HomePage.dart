@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:healfast01/Routes/RoutesName.dart';
 import 'package:healfast01/ScreenPages/Clinic.dart';
+import 'package:healfast01/ScreenPages/GoogleMap.dart';
 import 'package:healfast01/ScreenPages/Profile.dart';
 
 
@@ -56,7 +57,7 @@ class homepage extends State<HomePage>{
               children: [
                 ListTile(
                   onTap: (){
-
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=>GoogleMaps()));
                   },
                   title: const Text('Home'),
                   leading: const Icon(Icons.home),
