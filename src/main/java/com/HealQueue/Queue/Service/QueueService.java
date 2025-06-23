@@ -29,8 +29,12 @@ public class QueueService {
 
     @Transactional
     public void deleteProduct(int id) {
-        repo.deleteById(id);
-        repo.updateNo();
+       AppointmentBooking deleted =  repo.findById(id).orElse(null);
+        if(deleted!=null){
+            int deletedNo = deleted.getPatientNo();
+            repo.deleteById(id);
+            repo.updateNo(deletedNo);
+        }
     }
 
     public List<AppointmentBooking> getAllQueue() {

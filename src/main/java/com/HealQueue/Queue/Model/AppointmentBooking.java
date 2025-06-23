@@ -22,7 +22,6 @@ public class AppointmentBooking {
     private LocalDateTime registeredAt;
     private Integer patientNo;
     public AppointmentBooking() {
-
     }
 
 
