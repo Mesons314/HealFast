@@ -34,4 +34,9 @@ public class UserDetailController {
             throw new RuntimeException(e);
         }
     }
+    @PutMapping("/userName/data/{id}")
+    public User updateUser(@ResponseBody User user, @PathVariable int id){
+
 }
+^X
+
