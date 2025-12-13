@@ -1,64 +1,71 @@
-class ClinicModel{
-  String? userName;
-  String? password;
-  String? address;
-  String? graduationDegree;
-  String? firstName;
-  String? lastName;
-  String? phoneNo;
-  String? speciality;
-  String? gender;
-  String? dob;
-  String? clinicName;
-  String? clinicPhoneNo;
-  String? role;
+class ClinicModel {
+  final int? id;
+  final String? userName;
+  final String? password;
+  final String? address;
+  final String? graduationDegree;
+  final String? firstName;
+  final String? lastName;
+  final String? speciality;
+  final String? gender;
+  final String? dob;
+  final String? clinicName;
+  final String? phoneNo;
+  final String? clinicPhoneNo;
+  final String? role;
 
   ClinicModel({
-      this.userName,
-      this.password,
-      this.address,
-      this.graduationDegree,
-      this.firstName,
-      this.lastName,
-      this.phoneNo,
-      this.speciality,
-      this.gender,
-      this.dob,
-      this.clinicName,
-      this.clinicPhoneNo,
-      this.role});
+    this.id,
+    this.userName,
+    this.password,
+    this.address,
+    this.graduationDegree,
+    this.firstName,
+    this.lastName,
+    this.speciality,
+    this.gender,
+    this.dob,
+    this.clinicName,
+    this.phoneNo,
+    this.clinicPhoneNo,
+    this.role,
+  });
 
-  factory ClinicModel.fromJson(Map<String,dynamic> json){
+  factory ClinicModel.fromJson(Map<String, dynamic> json) {
     return ClinicModel(
-        userName: json['userName'],
-        gender:json['gender'] ,
-        dob: json['dob'],
-        password: json['password'],
-        firstName: json['firstName'],
-        lastName: json['lastName'],
-        address : json['address'],
-        phoneNo: json['phoneNo'],
-        clinicName: json['clinicName'],
-        clinicPhoneNo: json['clinicPhoneNo'],
-        speciality: json['speciality'],
-        graduationDegree: json['graduationDegree'],
-        role: json['role']
+      id: json['id'],
+      userName: json['userName'],
+      password: json['password'],
+      address: json['address'],
+      graduationDegree: json['graduationDegree'],
+      firstName: json['firstName'],
+      lastName: json['lastName'],
+      speciality: json['speciality'],
+      gender: json['gender'],
+      dob: json['dob'],
+      clinicName: json['clinicName'],
+      phoneNo: json['phoneNo'],
+      clinicPhoneNo: json['clinicPhoneNo'],
+      role: json['role'],
     );
   }
 
-  Map<String,dynamic> toJson()=>{
-    'userName': userName,
-    'password': password,
-    'address': address,
-    'gender': gender,
-    'firstName': firstName,
-    'lastName': lastName,
-    'dob': dob,
-    'phoneNo': phoneNo,
-    'clinicName': clinicName,
-    'clinicPhoneNo': clinicPhoneNo,
-    'speciality' : speciality,
-    'graduationDegree': graduationDegree,
-    'role':role
-  };
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'userName': userName,
+      'password': password,
+      'address': address,
+      'graduationDegree': graduationDegree,
+      'firstName': firstName,
+      'lastName': lastName,
+      'speciality': speciality,
+      'gender': gender,
+      'dob': dob,
+      'clinicName': clinicName,
+      'phoneNo': phoneNo,
+      'clinicPhoneNo': clinicPhoneNo,
+      'role': role,
+    };
+  }
 }

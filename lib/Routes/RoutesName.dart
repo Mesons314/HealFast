@@ -1,11 +1,13 @@
-
-class RoutesName{
-  static const String userRegister = 'User_Register';
-  static const String clinicRegister = 'Clinic_Register';
-  static const String login = 'Login';
-  static const String homePage = 'Home_Page';
-  static const String profilePage = 'Profile_Page';
-  static const String clinicName = 'Clinic_Names';
-  static const String splashScreen = 'Slash_Screen';
-  static const String bottomNavigation = 'Bottom_Navigation';
+class RoutesName {
+  static const String splashScreen = '/';
+  static const String userRegister = '/userRegister';
+  static const String clinicRegister = '/clinicRegister';
+  static const String clinicName = '/clinicHome';
+  static const String homePage = '/homePage';
+  static const String login = '/login';
+  static const String profilePage = '/profile';
+  static const String bottomNavigation = '/bottomNav';
+  static const String clinicInfo = '/clinicInfo';
+  static const String appointmentForm = '/appointmentForm';
+  static const String myAppointments = '/myAppointments';
 }

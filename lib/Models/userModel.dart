@@ -1,42 +1,55 @@
-import 'dart:ffi';
-
-class UserModel{
+class UserModel {
+  int? id;
   String? userName;
-  String? gender;
-  String? dob;
   String? password;
+  String? address;
+  String? gender;
   String? firstName;
   String? lastName;
-  String? address;
+  String? dob;
   String? phoneNo;
   String? role;
-  Long? id;
 
-  UserModel({required this.userName,required this.gender,required this.dob,required this.password,required this.firstName,
-    required this.lastName,required this.address,this.id, required this.role, required this.phoneNo});
+  UserModel({
+    this.id,
+    required this.userName,
+    required this.password,
+    required this.address,
+    required this.gender,
+    required this.firstName,
+    required this.lastName,
+    required this.dob,
+    required this.phoneNo,
+    required this.role,
+  });
 
-  factory UserModel.fromJson(Map<String , dynamic> json){
+  factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
-        userName: json['userName'],
-        gender:json['gender'] ,
-        dob: json['dob'],
-        password: json['password'],
-        firstName: json['firstName'],
-        lastName: json['lastName'],
-        address : json['address'],
-        phoneNo: json['phoneNo'],
-        role: json['role']
+      id: json['id'],
+      userName: json['userName'],
+      password: json['password'],
+      address: json['address'],
+      gender: json['gender'],
+      firstName: json['firstName'],
+      lastName: json['lastName'],
+      dob: json['dob'],
+      phoneNo: json['phoneNo'],
+      role: json['role'],
     );
   }
 
-   Map<String, dynamic> toJson()=>{
-     'userName': userName,
-     'password': password,
-     'address': address,
-     'gender': gender,
-     'firstName': firstName,
-     'lastName': lastName,
-     'dob': dob,
-     'phoneNo': phoneNo
-  };
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'userName': userName,
+      'password': password,
+      'address': address,
+      'gender': gender,
+      'firstName': firstName,
+      'lastName': lastName,
+      'dob': dob,
+      'phoneNo': phoneNo,
+      'role': role,
+    };
+  }
 }

@@ -1,40 +1,32 @@
-
+import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:healfast01/BottomNav/BottomNavigation.dart';
 import 'package:healfast01/Routes/RoutesName.dart';
-import 'package:healfast01/ScreenPages/DoctorsRegisterationPage.dart';
-import 'package:healfast01/ScreenPages/HomePage.dart';
-import 'package:healfast01/ScreenPages/Login.dart';
-import 'package:healfast01/ScreenPages/Profile.dart';
+import 'package:healfast01/ScreenPages/Clinic/home_page.dart';
 import 'package:healfast01/ScreenPages/Splash_Screen.dart';
-import 'package:healfast01/ScreenPages/UserRegisteration.dart';
+import 'package:healfast01/ScreenPages/User/appointment_details.dart';
+import 'package:healfast01/ScreenPages/User/clinics_info.dart';
+import 'package:healfast01/ScreenPages/User/user_registeration_screen.dart';
+import 'package:healfast01/ScreenPages/Login.dart';
+import 'package:healfast01/ScreenPages/User/home_page.dart';
+import 'package:healfast01/ScreenPages/Clinic/DoctorsRegisterationPage.dart';
+import 'package:healfast01/BottomNav/BottomNavigation.dart';
+import 'package:healfast01/ScreenPages/User/profile_screen.dart';
+import 'package:healfast01/ScreenPages/User/appointment_form.dart';
 
-class Routes{
+import '../ScreenPages/User/clinic_list.dart';
 
-  static Route<dynamic> generateRoute(RouteSettings settings){
-    switch(settings.name){
-      case RoutesName.userRegister:
-        return MaterialPageRoute(builder: (context)=>UserRegisteration());
-      case RoutesName.clinicRegister:
-        return MaterialPageRoute(builder: (context)=>DoctorsRegisterationPage());
-      case RoutesName.clinicName:
-        return MaterialPageRoute(builder: (context)=>HomePage());
-      case RoutesName.homePage:
-        return MaterialPageRoute(builder: (context)=>HomePage());
-      case RoutesName.login:
-        return MaterialPageRoute(builder: (context)=>Login());
-      case RoutesName.profilePage:
-        return MaterialPageRoute(builder: (context)=>Profile());
-      case RoutesName.splashScreen:
-        return MaterialPageRoute(builder: (context)=>SplashScreen());
-      case RoutesName.bottomNavigation:
-        return MaterialPageRoute(builder: (context)=>BottomNavigation());
-      default:
-        return MaterialPageRoute(builder: (context){
-          return const Scaffold(
-            body: Center(child: Text("No page is present")),
-          );
-        });
-    }
-  }
+class AppRoutes {
+  static final pages = [
+    GetPage(name: RoutesName.splashScreen, page: () => SplashScreen()),
+    GetPage(name: RoutesName.userRegister, page: () => UserRegisteration()),
+    GetPage(name: RoutesName.clinicRegister, page: () => DoctorsRegisterationPage()),
+    GetPage(name: RoutesName.clinicName, page: () => Clinic()),
+    GetPage(name: RoutesName.homePage, page: () => HomePage()),
+    GetPage(name: RoutesName.login, page: () => Login()),
+    GetPage(name: RoutesName.profilePage, page: () => Profile()),
+    GetPage(name: RoutesName.bottomNavigation, page: () => BottomNavigation()),
+    GetPage(name: RoutesName.clinicInfo, page: ()=>ClinicsInfo()),
+    GetPage(name: RoutesName.appointmentForm, page: ()=>AppointmentForm()),
+    GetPage(name: RoutesName.myAppointments, page: ()=>AppointmentDetails())
+  ];
 }

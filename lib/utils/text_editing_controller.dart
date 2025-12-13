@@ -9,10 +9,12 @@ class textEditingController {
   TextEditingController lastName = TextEditingController();
   TextEditingController degree = TextEditingController();
   TextEditingController speciality = TextEditingController();
-  TextEditingController ClinicPhoneNo = TextEditingController();
+  TextEditingController clinicPhoneNo = TextEditingController();
   TextEditingController address = TextEditingController();
   TextEditingController password = TextEditingController();
   TextEditingController role = TextEditingController();
+  TextEditingController graduationDegree = TextEditingController();
   String? gender = 'Male';
   TextEditingController dob = TextEditingController();
+  TextEditingController email = TextEditingController();
 }
