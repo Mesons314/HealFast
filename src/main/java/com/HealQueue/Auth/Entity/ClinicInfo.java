@@ -1,27 +1,41 @@
 package com.HealQueue.Auth.Entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
-@Table(name = "Yash")
+@Table(name = "Clinics")
 public class ClinicInfo {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
+
+    @Column(nullable = false, unique = true)
     private String userName;
+    @Column(nullable = false)
     private String password;
+    @Column(nullable = false)
     private String address;
+    @Column(nullable = false)
     private String graduationDegree;
+    @Column(nullable = false)
     private String firstName;
+
     private String lastName;
+    @Column(nullable = false)
     private String speciality;
+    @Column(nullable = false)
     private String gender;
+    @Column(nullable = false)
     private String dob;
+    @Column(nullable = false)
     private String clinicName;
+    @Column(nullable = false, unique = true)
     private String phoneNo;
+    @Column(nullable = false)
     private String clinicPhoneNo;
+
+    @Column(nullable = false)
     private String role;
 
     public ClinicInfo() {

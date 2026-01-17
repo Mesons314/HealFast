@@ -1,22 +1,31 @@
 package com.HealQueue.Auth.Entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
-@Table(name = "Gawade")
+@Table(name = "UserTable")
 public class UserInfo {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
+    @Column(nullable = false,unique = true)
     private String userName;
+    @Column(nullable = false)
     private String password;
+    @Column(nullable = false)
     private String address;
+    @Column(nullable = false)
     private String gender;
+    @Column(nullable = false)
     private String firstName;
+    @Column(nullable = false)
     private String lastName;
+    @Column(nullable = false)
     private String dob;
+    @Column(nullable = false, unique = true)
+    private String phoneNo;
+    @Column(nullable = false)
     private String role;
 
     public UserInfo() {
@@ -44,6 +53,14 @@ public class UserInfo {
 
     public void setDob(String dob) {
         this.dob = dob;
+    }
+
+    public String getPhoneNo() {
+        return phoneNo;
+    }
+
+    public void setPhoneNo(String phoneNo) {
+        this.phoneNo = phoneNo;
     }
 
     public String getFirstName() {

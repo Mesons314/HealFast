@@ -4,20 +4,24 @@ import com.HealQueue.Auth.Entity.UserInfo;
 
 public class UserResponse {
 
+    private long id;
     private String userName;
     private String address;
     private String firstName;
     private String lastName;
     private String dob;
     private String gender;
+    private String phoneNo;
 
     public UserResponse(UserInfo userInfo) {
+        this.id = userInfo.getId();
         this.gender = userInfo.getGender();
         this.address = userInfo.getAddress();
         this.dob = userInfo.getDob();
         this.firstName = userInfo.getFirstName();
         this.lastName = userInfo.getLastName();
         this.userName = userInfo.getUserName();
+        this.phoneNo = userInfo.getPhoneNo();
     }
 
     public String getAddress() {
@@ -64,5 +68,11 @@ public class UserResponse {
 
     public String getGender(){return gender;}
 
+    public String getPhoneNo() {
+        return phoneNo;
+    }
 
+    public void setPhoneNo(String phoneNo) {
+        this.phoneNo = phoneNo;
+    }
 }

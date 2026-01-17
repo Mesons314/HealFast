@@ -1,5 +1,9 @@
 package com.HealQueue.Auth.DTO;
 
+import org.springframework.security.core.GrantedAuthority;
+
+import java.util.Collection;
+
 public class AuthRequest {
     private String userName;
     private String password;
@@ -8,6 +12,7 @@ public class AuthRequest {
         this.password = password;
         this.userName = userName;
     }
+
 
     public String getUserName() {
         return userName;
