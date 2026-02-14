@@ -4,6 +4,9 @@ import com.HealQueue.Auth.DTO.AuthRequest;
 import com.HealQueue.Auth.Entity.ClinicInfo;
 import com.HealQueue.Auth.Entity.UserPrincipal;
 import com.HealQueue.Auth.Repository.ClinicRepo;
+import com.HealQueue.googleMap.Service.GoogleMapService;
+import com.google.maps.errors.ApiException;
+import com.google.maps.model.GeocodingResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -12,7 +15,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class ClinicService {
@@ -27,6 +33,9 @@ public class ClinicService {
     private final AuthenticationManager authManager;
     @Autowired
     private final ClinicRepo repo;
+//
+//    @Autowired
+//    private GoogleMapService googleMapService;
 
     public ClinicService(AuthenticationManager authManager, JWTService jwtService, PasswordEncoder passwordEncoder, ClinicRepo repo) {
         this.authManager = authManager;
@@ -35,7 +44,7 @@ public class ClinicService {
         this.repo = repo;
     }
 
-    public ClinicInfo register(ClinicInfo clinicInfo) {
+    public ClinicInfo register(ClinicInfo clinicInfo) throws IOException, InterruptedException, ApiException {
         if(repo.existsByUserName(clinicInfo.getFirstName())){
             throw new RuntimeException("User Already Exist");
         }
@@ -43,19 +52,31 @@ public class ClinicService {
         return repo.save(clinicInfo);
     }
 
-    public String login(AuthRequest request) {
-        ClinicInfo clinicInfo = repo.findByUserName(request.getUserName());
-        if(clinicInfo == null){
+    public Map<String, String> login(AuthRequest request) {
+        // Get Optional from repository
+        Optional<ClinicInfo> optionalClinic = repo.findByUserName(request.getUserName());
+        System.out.println("Attempting login for user: " + request.getUserName());
+
+        // Check if user exists
+        if(optionalClinic.isEmpty()){
             throw new RuntimeException("User Does Not Exist");
         }
-        Authentication authentication = authManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUserName(),request.getPassword()));
+
+        // Unwrap the ClinicInfo object
+        ClinicInfo clinicInfo = optionalClinic.get();
+
+        // Authenticate using Spring Security
+        Authentication authentication = authManager.authenticate(
+                new UsernamePasswordAuthenticationToken(request.getUserName(), request.getPassword())
+        );
         SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        // If authentication is successful, generate JWT tokens
         if(authentication.isAuthenticated()){
-//            return jwtService.generateToken(request.getUserName());
-            UserPrincipal userPrincipal = new UserPrincipal(clinicInfo);
-            return jwtService.generateToken(userPrincipal);
+            UserPrincipal userPrincipal = new UserPrincipal(clinicInfo); // pass actual ClinicInfo
+            return jwtService.generateTokens(userPrincipal);
         }
-        return "Fail";
+        throw new RuntimeException("Authentication failed");
     }
 
     public List<ClinicInfo> getClinic() {
@@ -68,5 +89,8 @@ public class ClinicService {
 
     public ClinicInfo findByData(long id) {
         return repo.findById(id).orElse(null);
+    }
+    public Optional<ClinicInfo> findByUserName(String userName) {
+        return repo.findByUserName(userName);
     }
 }

@@ -13,9 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-
 import java.io.IOException;
-import java.util.List;
 
 @Component
 public class JwtAuthFIlter extends OncePerRequestFilter {
@@ -28,8 +26,6 @@ public class JwtAuthFIlter extends OncePerRequestFilter {
 
     //In this we should not allow the refresh token, so we need to add something to
     //restrict it where the doFilter is happening
-
-
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String authHeader = request.getHeader("Authorization");

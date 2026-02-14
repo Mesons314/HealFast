@@ -3,41 +3,71 @@ package com.HealQueue.Queue.Service;
 import com.HealQueue.Queue.Model.AppointmentBooking;
 import com.HealQueue.Queue.Repsitory.QueueRepo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class QueueService {
 
     @Autowired
     private QueueRepo repo;
-    public AppointmentBooking add(AppointmentBooking appointmentBooking) {
-        int currentSize = (int) repo.count();
+    @Autowired
+    private TimeService timeService;
+
+    //Add the enum for In queue, is completed
+    public AppointmentBooking add(AppointmentBooking appointmentBooking, long clinicId) {
+        int currentSize = repo.countByClinicId(clinicId);
         appointmentBooking.setPatientNo(currentSize+1);
+        appointmentBooking.setDuration(timeService.getQueueTime((long) currentSize));
         appointmentBooking.setRegisteredAt(LocalDateTime.now());
         return repo.save(appointmentBooking);
     }
 
-    public AppointmentBooking getQueueById(long id) {
-        return repo.findById((int) id).orElse(null);
+    public Optional<AppointmentBooking> getQueueById(long id, Long clinicId) {
+        return repo.findByIdAndClinicId(id , clinicId);
     }
 
     @Transactional
-    public void deleteProduct(int id) {
-       AppointmentBooking deleted =  repo.findById(id).orElse(null);
-        if(deleted!=null){
-            int deletedNo = deleted.getPatientNo();
-            repo.deleteById(id);
-            repo.updateNo(deletedNo);
+    public boolean deleteQueueByClinic(long id, Long clinicId) {
+        Optional<AppointmentBooking> deletedOptional =  repo.findByIdAndClinicId(id,clinicId);
+        if(deletedOptional.isEmpty()){
+            return false;
         }
+        AppointmentBooking deleted = deletedOptional.get();
+        int deletedNo = deleted.getPatientNo();
+        //Here i need to return boolean so think about that later on
+        repo.delete(deleted);
+        repo.updateNo(deletedNo, clinicId);
+        repo.timeRemained(deletedNo, clinicId);
+        return true;
     }
 
-    public List<AppointmentBooking> getAllQueue() {
-        return repo.findAll();
+    @Transactional
+    public void deleteQueueByUser(long id, Long userId){
+        Optional<AppointmentBooking> deletedOptional = repo.findByIdAndUserId(id,userId);
+        if(deletedOptional.isEmpty()){
+            return;
+        }
+        AppointmentBooking deleted = deletedOptional.get();
+        int deletedNo = deleted.getPatientNo();
+        repo.delete(deleted);
+        repo.updateNo(deletedNo,userId);
+        repo.timeRemained(deletedNo,userId);
+    }
+
+    //I think all the appointment table are together, but I want appointment table for each clinic,
+    //so I need to change that currently I am selecting the queue from a single appointment table
+    //so this table consists all the queue of every clinic, so it searches for those specific clinic ID then
+    //it answers which take too much time, so I need to improve that
+    public List<AppointmentBooking> getAllQueue(Long clinicId) {
+        return repo.findAllByClinicId(clinicId);
+    }
+
+    public int getQueueSize(Long clinicId){
+        return (int) repo.countByClinicId(clinicId);
     }
 }

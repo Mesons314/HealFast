@@ -32,9 +32,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/api/login/clinic",
-                                "/api/register/clinic","/api/login/user","/api/register/user")
-                        .permitAll()
+                        .requestMatchers("/api/register/**","/api/login/**","/api/queue/**","/api/refresh","/error").permitAll()
                         .requestMatchers("/api/clinic/**").hasRole("CLINIC")
                         .requestMatchers("/api/user/**").hasRole("USER")
                         .anyRequest()
