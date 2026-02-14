@@ -2,6 +2,10 @@ package com.HealQueue.USER.Controller;
 
 import com.HealQueue.Auth.Entity.ClinicInfo;
 import com.HealQueue.Auth.Service.ClinicService;
+import com.HealQueue.CLINIC.DTO.ClinicResponse;
+import com.HealQueue.googleMap.Service.GoogleMapService;
+import com.google.maps.GeocodingApi;
+import com.google.maps.model.GeocodingResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,10 +20,11 @@ import java.util.List;
 @RequestMapping("/api/user")
 public class getClinicController {
 
-
-
     @Autowired
     private ClinicService clinicService;
+
+    @Autowired
+    private GoogleMapService googleMapService;
 
     @GetMapping("/getClinic")
     public ResponseEntity<List<ClinicInfo>> getClinicList(){
@@ -27,16 +32,29 @@ public class getClinicController {
     }
 
     @GetMapping("/getClinic/{id}")
-    public ResponseEntity<ClinicInfo> clinicInfo(@PathVariable long id){
-        ClinicInfo clinis = clinicService.findById(id);
+    public ResponseEntity<ClinicResponse> clinicInfo(@PathVariable long id){
+        ClinicInfo clinic = clinicService.findById(id);
+        if(clinic == null){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+//        try{
+//            GeocodingResult[] geocodingResults = googleMapService.geocodeAddress(clinic.getAddress());
+//            double lat = 0;
+//            double lon = 0;
+//
+//            if(geocodingResults.length>0){
+//                lat = geocodingResults[0].geometry.location.lat;
+//                lon = geocodingResults[0].geometry.location.lng;
+//            }
+//            return ResponseEntity.ok(new ClinicResponse(clinic, lat, lon));
+//        }catch (Exception e){
+//            e.printStackTrace();
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+//        }
         try {
-            if(clinis!=null){
-                return new ResponseEntity<>(clinis,HttpStatus.OK);
-            }
-            throw new RuntimeException("Clinic not found");
+            return new ResponseEntity<>(new ClinicResponse(clinic), HttpStatus.OK);
         } catch (RuntimeException e) {
             throw new RuntimeException(e);
         }
     }
-
 }
