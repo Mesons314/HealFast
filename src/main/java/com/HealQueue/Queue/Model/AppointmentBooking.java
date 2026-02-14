@@ -9,11 +9,15 @@ import java.time.LocalDateTime;
 @Table(name = "Appointments")
 public class AppointmentBooking {
 
+
+    //I need to refine the tables as it is not following the standardized normalize form
+    //So i need to add the foreign key and also the column relations
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false, unique = true)
     private long id;
 
+    private Long userId;
     private String patientName;
     private String patientAge;
     private String patientGender;
@@ -41,6 +45,7 @@ public class AppointmentBooking {
     public AppointmentBooking(
             String clinicAddress,
             Long clinicId,
+            Long userId,
             String clinicName,
             Long duration,
             String mobileNo,
@@ -51,6 +56,7 @@ public class AppointmentBooking {
             LocalDateTime registeredAt) {
         this.clinicAddress = clinicAddress;
         this.clinicId = clinicId;
+        this.userId = userId;
         this.clinicName = clinicName;
         this.duration = duration;
         this.mobileNo = mobileNo;
@@ -58,7 +64,7 @@ public class AppointmentBooking {
         this.patientGender = patientGender;
         this.patientName = patientName;
         this.patientNo = patientNo;
-        this.registeredAt = LocalDateTime.now();
+        this.registeredAt = registeredAt;
     }
 
     //    public AppointmentBooking(Integer patientNo, String mobileNo, String patientAge, String patientGender,
@@ -88,6 +94,18 @@ public class AppointmentBooking {
 
     public Long getClinicId() {
         return clinicId;
+    }
+
+    public void setRegisteredAt(LocalDateTime registeredAt) {
+        this.registeredAt = registeredAt;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public void setClinicId(Long clinicId) {
