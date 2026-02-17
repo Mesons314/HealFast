@@ -1,8 +1,9 @@
 package com.HealQueue.CLINIC.Controller;
 
-import com.HealQueue.Auth.Entity.ClinicInfo;
-import com.HealQueue.Auth.Service.ClinicService;
-import com.HealQueue.CLINIC.DTO.ClinicResponse;
+import com.HealQueue.CLINIC.DTO.ClinicRequestDTO;
+import com.HealQueue.CLINIC.DTO.ClinicResponseDTO;
+import com.HealQueue.CLINIC.Entity.ClinicInfo;
+import com.HealQueue.CLINIC.Service.ClinicService;
 import com.HealQueue.Queue.Model.AppointmentBooking;
 import com.HealQueue.Queue.Service.QueueService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,13 +62,21 @@ public class ClinicController {
     //which is not safe
 
     @GetMapping("/me")
-    public ResponseEntity<ClinicResponse> loggedInClinic(){
+    public ResponseEntity<ClinicResponseDTO> loggedInClinic(){
         String userName = SecurityContextHolder.getContext().getAuthentication().getName();
         System.out.println("User Name is "+userName);
-        ClinicInfo clinicInfo = clinicService.findByUserName(userName)
-                .orElseThrow(()->new RuntimeException("No clinic exists by this username"));
+        ClinicResponseDTO clinicResponse = clinicService.findByUserName(userName);
 
-        return ResponseEntity.ok(new ClinicResponse(clinicInfo));
+        return new ResponseEntity<>(clinicResponse, HttpStatus.OK);
+    }
+
+    @PostMapping("/postData")
+    public ResponseEntity<ClinicResponseDTO> addData(@RequestBody ClinicRequestDTO clinicRequestDTO){
+        String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+        ClinicInfo clinicInfo = clinicService.addClinicData(clinicRequestDTO,userName);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(new ClinicResponseDTO(clinicInfo));
     }
 
     @GetMapping("/queue/get")
@@ -75,9 +84,8 @@ public class ClinicController {
         //Instead of using this optional we should use the security context to get the
         //current logged in clinic so that only that clinic will get their queue
         String userName = SecurityContextHolder.getContext().getAuthentication().getName();
-        ClinicInfo clinicInfo = clinicService.findByUserName(userName)
-                .orElseThrow(()->new RuntimeException("No username exists"));
-        Long clinicId = clinicInfo.getId();
+        ClinicResponseDTO clinicResponseDTO = clinicService.findByUserName(userName);
+        Long clinicId = clinicResponseDTO.getProfileId();
         List<AppointmentBooking> appointmentBookings = queueService.getAllQueue(clinicId);
         return new ResponseEntity<>(appointmentBookings,HttpStatus.OK);
     }
@@ -88,10 +96,9 @@ public class ClinicController {
                 .getContext()
                 .getAuthentication()
                 .getName();
-        ClinicInfo clinicInfo = clinicService
-                .findByUserName(username)
-                .orElseThrow(()->new RuntimeException("No username exists"));
-        Long clinicId = clinicInfo.getId();
+        ClinicResponseDTO clinicResponseDTO = clinicService
+                .findByUserName(username);
+        Long clinicId = clinicResponseDTO.getProfileId();
         AppointmentBooking appointmentBooking = queueService.getQueueById(appointmentId, clinicId)
                 .orElseThrow(()->new RuntimeException("No appointment exists"));
         return new ResponseEntity<>(appointmentBooking, HttpStatus.OK);
@@ -103,15 +110,16 @@ public class ClinicController {
     @DeleteMapping("/delete/queue/{id}")
     public ResponseEntity<?> deleteQueue(@PathVariable long id) {
 
-        String userName = SecurityContextHolder
+        String username = SecurityContextHolder
                 .getContext()
                 .getAuthentication()
                 .getName();
 
-        ClinicInfo clinicInfo = clinicService.findByUserName(userName)
-                .orElseThrow(() -> new RuntimeException("Clinic not found"));
+        ClinicResponseDTO clinicResponseDTO = clinicService
+                .findByUserName(username);
+        Long clinicId = clinicResponseDTO.getProfileId();
 
-        boolean deleted = queueService.deleteQueueByClinic(id, clinicInfo.getId());
+        boolean deleted = queueService.deleteQueueByClinic(id, clinicId);
 
         if (!deleted) {
             return ResponseEntity

@@ -1,6 +1,6 @@
 package com.HealQueue.Auth.Security;
 
-import com.HealQueue.Auth.JWTFiles.JwtAuthFIlter;
+import com.HealQueue.Auth.JWTFiles.JwtAuthFilter;
 import com.HealQueue.Auth.Service.MyUserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -12,7 +12,6 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -24,7 +23,7 @@ import org.springframework.stereotype.Service;
 public class SecurityConfig {
 
     @Autowired
-    private JwtAuthFIlter jwtAuthFIlter;
+    private JwtAuthFilter jwtAuthFIlter;
 
     @Autowired
     private MyUserDetailService userDetailsService;
@@ -32,7 +31,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/api/register/**","/api/login/**","/api/queue/**","/api/refresh","/error").permitAll()
+                        .requestMatchers("/api/auth/register/**","/api/auth/login/**","/api/refresh","/error").permitAll()
                         .requestMatchers("/api/clinic/**").hasRole("CLINIC")
                         .requestMatchers("/api/user/**").hasRole("USER")
                         .anyRequest()

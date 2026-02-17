@@ -16,7 +16,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 
 @Component
-public class JwtAuthFIlter extends OncePerRequestFilter {
+public class JwtAuthFilter extends OncePerRequestFilter {
 
     @Autowired
     private JWTService jwtService;
@@ -52,6 +52,6 @@ public class JwtAuthFIlter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getRequestURI();
-        return path.equals("/api/login/user") || path.equals("/api/login/clinic") || path.equals("/api/register/user") || path.equals("/api/register/clinic");
+        return path.equals("/api/auth/login/user") || path.equals("/api/auth/register/user");
     }
 }

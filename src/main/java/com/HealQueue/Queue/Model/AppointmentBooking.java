@@ -1,159 +1,84 @@
 package com.HealQueue.Queue.Model;
 
+import com.HealQueue.CLINIC.Entity.ClinicInfo;
+import com.HealQueue.USER.Entity.UserInfo;
+   // assuming you have Clinic entity
 import jakarta.persistence.*;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "Appointments")
+@Table(name = "appointments")
 public class AppointmentBooking {
 
-
-    //I need to refine the tables as it is not following the standardized normalize form
-    //So i need to add the foreign key and also the column relations
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(nullable = false, unique = true)
-    private long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    private Long userId;
+    /* -------------------- RELATIONS -------------------- */
+
+    // Who booked the appointment
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private UserInfo user;
+
+    // Which clinic appointment belongs to
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "clinic_id", nullable = false)
+    private ClinicInfo clinic;
+
+    /* -------------------- PATIENT DETAILS -------------------- */
+
     private String patientName;
     private String patientAge;
     private String patientGender;
     private String mobileNo;
 
+    private Integer patientNo;
+    private Long duration;
+
     @Column(nullable = false, updatable = false)
     private LocalDateTime registeredAt;
 
-    private Integer patientNo;
-    private Long duration;
-    private Long clinicId;
-    private String clinicName;
-    private String clinicAddress;
-    private double latitude;
-    private double longitude;
-//
-//    public AppointmentBooking() {
-//        // Automatically set registeredAt when the object is created
-//        this.registeredAt = LocalDateTime.now();
-//    }
+    /* -------------------- AUTO TIMESTAMP -------------------- */
 
-    public AppointmentBooking() {
+    @PrePersist
+    protected void onCreate() {
+        this.registeredAt = LocalDateTime.now();
     }
 
-    public AppointmentBooking(
-            String clinicAddress,
-            Long clinicId,
-            Long userId,
-            String clinicName,
-            Long duration,
-            String mobileNo,
-            String patientAge,
-            String patientGender,
-            String patientName,
-            Integer patientNo,
-            LocalDateTime registeredAt) {
-        this.clinicAddress = clinicAddress;
-        this.clinicId = clinicId;
-        this.userId = userId;
-        this.clinicName = clinicName;
-        this.duration = duration;
-        this.mobileNo = mobileNo;
-        this.patientAge = patientAge;
-        this.patientGender = patientGender;
-        this.patientName = patientName;
-        this.patientNo = patientNo;
-        this.registeredAt = registeredAt;
-    }
+    /* -------------------- CONSTRUCTORS -------------------- */
 
-    //    public AppointmentBooking(Integer patientNo, String mobileNo, String patientAge, String patientGender,
-//                              String patientName, Long duration, Long clinicId) {
-//        this.mobileNo = mobileNo;
-//        this.patientAge = patientAge;
-//        this.patientGender = patientGender;
-//        this.patientName = patientName;
-//        this.registeredAt = LocalDateTime.now(); // Automatically set
-//        this.patientNo = patientNo;
-//        this.duration = duration;
-//    }
+    public AppointmentBooking() {}
 
-    // Getters and setters...
+    /* -------------------- GETTERS & SETTERS -------------------- */
 
-    public Integer getPatientNo() {
-        return patientNo;
-    }
-
-    public String getClinicAddress() {
-        return clinicAddress;
-    }
-
-    public void setClinicAddress(String clinicAddress) {
-        this.clinicAddress = clinicAddress;
-    }
-
-    public Long getClinicId() {
-        return clinicId;
-    }
-
-    public void setRegisteredAt(LocalDateTime registeredAt) {
-        this.registeredAt = registeredAt;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public void setClinicId(Long clinicId) {
-        this.clinicId = clinicId;
-    }
-
-    public String getClinicName() {
-        return clinicName;
-    }
-
-    public void setClinicName(String clinicName) {
-        this.clinicName = clinicName;
-    }
-
-    public double getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
-    }
-
-    public double getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
-    }
-
-    public void setPatientNo(Integer patientNo) {
-        this.patientNo = patientNo;
-    }
-
-    public LocalDateTime getRegisteredAt() {
-        return registeredAt;
-    }
-
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public String getMobileNo() {
-        return mobileNo;
+    public UserInfo getUser() {
+        return user;
     }
 
-    public void setMobileNo(String mobileNo) {
-        this.mobileNo = mobileNo;
+    public void setUser(UserInfo user) {
+        this.user = user;
+    }
+
+    public ClinicInfo getClinic() {
+        return clinic;
+    }
+
+    public void setClinic(ClinicInfo clinic) {
+        this.clinic = clinic;
+    }
+
+    public String getPatientName() {
+        return patientName;
+    }
+
+    public void setPatientName(String patientName) {
+        this.patientName = patientName;
     }
 
     public String getPatientAge() {
@@ -172,12 +97,20 @@ public class AppointmentBooking {
         this.patientGender = patientGender;
     }
 
-    public String getPatientName() {
-        return patientName;
+    public String getMobileNo() {
+        return mobileNo;
     }
 
-    public void setPatientName(String patientName) {
-        this.patientName = patientName;
+    public void setMobileNo(String mobileNo) {
+        this.mobileNo = mobileNo;
+    }
+
+    public Integer getPatientNo() {
+        return patientNo;
+    }
+
+    public void setPatientNo(Integer patientNo) {
+        this.patientNo = patientNo;
     }
 
     public Long getDuration() {
@@ -186,5 +119,17 @@ public class AppointmentBooking {
 
     public void setDuration(Long duration) {
         this.duration = duration;
+    }
+
+    public LocalDateTime getRegisteredAt() {
+        return registeredAt;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setRegisteredAt(LocalDateTime registeredAt) {
+        this.registeredAt = registeredAt;
     }
 }

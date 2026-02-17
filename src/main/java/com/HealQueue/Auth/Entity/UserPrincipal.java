@@ -1,5 +1,7 @@
 package com.HealQueue.Auth.Entity;
 
+import com.HealQueue.CLINIC.Entity.ClinicInfo;
+import com.HealQueue.USER.Entity.UserInfo;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,18 +15,10 @@ public class UserPrincipal implements UserDetails {
     private final String password;
     private final Collection<? extends GrantedAuthority> authorities;
 
-    // Constructor for UserInfo (User)
-    public UserPrincipal(UserInfo userInfo) {
-        this.username = userInfo.getUserName();
-        this.password = userInfo.getPassword();
-        this.authorities = List.of(new SimpleGrantedAuthority("ROLE_"+userInfo.getRole())); // Assign role
-    }
-
-    // Constructor for ClinicInfo (Doctor)
-    public UserPrincipal(ClinicInfo clinicInfo) {
-        this.username = clinicInfo.getUserName();
-        this.password = clinicInfo.getPassword();
-        this.authorities = List.of(new SimpleGrantedAuthority("ROLE_"+clinicInfo.getRole())); // Assign role
+    public UserPrincipal(UserAccountData userAccountData){
+        this.username = userAccountData.getUserName();
+        this.password = userAccountData.getPassword();
+        this.authorities = List.of(new SimpleGrantedAuthority("ROLE_"+userAccountData.getRole()));
     }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

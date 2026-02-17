@@ -2,12 +2,12 @@ package com.HealQueue.Auth.Controller;
 
 import com.HealQueue.Auth.DTO.AuthRequest;
 import com.HealQueue.Auth.DTO.RefreshRequest;
-import com.HealQueue.Auth.Entity.ClinicInfo;
-import com.HealQueue.Auth.Entity.UserInfo;
-import com.HealQueue.Auth.Repository.UserRepo;
-import com.HealQueue.Auth.Service.ClinicService;
+import com.HealQueue.Auth.Entity.UserAccountData;
+import com.HealQueue.USER.Repository.UserRepo;
+import com.HealQueue.Auth.Service.AuthService;
+import com.HealQueue.CLINIC.Service.ClinicService;
 import com.HealQueue.Auth.Service.JWTService;
-import com.HealQueue.Auth.Service.UserService;
+import com.HealQueue.USER.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,18 +17,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/auth")
 @CrossOrigin(origins = "*")
 public class AuthController {
 
     @Autowired
-    private UserService userService;
-
-    @Autowired
-    private ClinicService clinicService;
-
-    @Autowired
-    private UserRepo userRepo;
+    private AuthService authService;
 
     @Autowired
     private JWTService jwtService;
@@ -37,46 +31,23 @@ public class AuthController {
     private UserDetailsService userDetailsService;
 
     @PostMapping("/register/user")
-    public ResponseEntity<?> registerUser(@RequestBody UserInfo user) {
-        try {
-            user = userService.registerUser(user);
-            return new ResponseEntity<>(user, HttpStatus.OK);
-        } catch (Exception e) {
+    public ResponseEntity<?> registerUser(@RequestBody UserAccountData userAccountData){
+        try{
+            userAccountData = authService.registerUser(userAccountData);
+            return new ResponseEntity<>(userAccountData, HttpStatus.OK);
+        }catch(Exception e){
             throw new RuntimeException(e.getMessage());
         }
     }
 
-    @PostMapping("/register/clinic")
-    public ResponseEntity<?> registerClinic(@RequestBody ClinicInfo clinicInfo) {
-        try {
-            clinicInfo = clinicService.register(clinicInfo);
-            return new ResponseEntity<>(clinicInfo, HttpStatus.OK);
-        } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
-        }
-    }
-
-    //Used for user login
     @PostMapping("/login/user")
-    public Map<String, String> loginUser(@RequestBody AuthRequest request) {
+    public Map<String,String> loginUser(@RequestBody AuthRequest authRequest){
         try {
-            return userService.login(request);
+            return authService.login(authRequest);
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
     }
-
-
-    //Used for logging in clinic
-    @PostMapping("/login/clinic")
-    public Map<String, String> loginClinic(@RequestBody AuthRequest request) {
-        try {
-            return clinicService.login(request);
-        } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
-        }
-    }
-
 
     //In this I am passing both types but, I need to pass only refresh so
     //after completing this make it correct

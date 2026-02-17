@@ -1,5 +1,6 @@
-package com.HealQueue.Auth.Entity;
+package com.HealQueue.CLINIC.Entity;
 
+import com.HealQueue.Auth.Entity.UserAccountData;
 import jakarta.persistence.*;
 
 @Entity
@@ -10,10 +11,10 @@ public class ClinicInfo {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @Column(nullable = false, unique = true)
-    private String userName;
-    @Column(nullable = false)
-    private String password;
+    @OneToOne
+    @JoinColumn(name = "user_id", nullable = false, unique = true)
+    private UserAccountData userAccountData;
+
     @Column(nullable = false)
     private String address;
     @Column(nullable = false)
@@ -30,13 +31,8 @@ public class ClinicInfo {
     private String dob;
     @Column(nullable = false)
     private String clinicName;
-    @Column(nullable = false, unique = true)
-    private String phoneNo;
     @Column(nullable = false)
     private String clinicPhoneNo;
-
-    @Column(nullable = false)
-    private String role;
 
     public ClinicInfo() {
     }
@@ -65,22 +61,6 @@ public class ClinicInfo {
         this.dob = dob;
     }
 
-    public String getPhoneNo() {
-        return phoneNo;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
-    public void setPhoneNo(String phoneNo) {
-        this.phoneNo = phoneNo;
-    }
-
     public String getGender() {
         return gender;
     }
@@ -95,6 +75,14 @@ public class ClinicInfo {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public UserAccountData getUserAccountData() {
+        return userAccountData;
+    }
+
+    public void setUserAccountData(UserAccountData userAccountData) {
+        this.userAccountData = userAccountData;
     }
 
     public String getFirstName() {
@@ -137,19 +125,4 @@ public class ClinicInfo {
         this.speciality = speciality;
     }
 
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
 }

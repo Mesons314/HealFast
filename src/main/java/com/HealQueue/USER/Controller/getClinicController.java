@@ -1,11 +1,9 @@
 package com.HealQueue.USER.Controller;
 
-import com.HealQueue.Auth.Entity.ClinicInfo;
-import com.HealQueue.Auth.Service.ClinicService;
-import com.HealQueue.CLINIC.DTO.ClinicResponse;
+import com.HealQueue.CLINIC.DTO.ClinicResponseDTO;
+import com.HealQueue.CLINIC.Entity.ClinicInfo;
+import com.HealQueue.CLINIC.Service.ClinicService;
 import com.HealQueue.googleMap.Service.GoogleMapService;
-import com.google.maps.GeocodingApi;
-import com.google.maps.model.GeocodingResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,11 +30,8 @@ public class getClinicController {
     }
 
     @GetMapping("/getClinic/{id}")
-    public ResponseEntity<ClinicResponse> clinicInfo(@PathVariable long id){
-        ClinicInfo clinic = clinicService.findById(id);
-        if(clinic == null){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+    public ResponseEntity<ClinicResponseDTO> clinicInfo(@PathVariable long id){
+        ClinicResponseDTO clinicResponseDTO = clinicService.findById(id);
 //        try{
 //            GeocodingResult[] geocodingResults = googleMapService.geocodeAddress(clinic.getAddress());
 //            double lat = 0;
@@ -52,7 +47,7 @@ public class getClinicController {
 //            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 //        }
         try {
-            return new ResponseEntity<>(new ClinicResponse(clinic), HttpStatus.OK);
+            return new ResponseEntity<>(clinicResponseDTO, HttpStatus.OK);
         } catch (RuntimeException e) {
             throw new RuntimeException(e);
         }
