@@ -1,5 +1,4 @@
 package com.HealQueue.CLINIC.Controller;
-
 import com.HealQueue.CLINIC.DTO.ClinicRequestDTO;
 import com.HealQueue.CLINIC.DTO.ClinicResponseDTO;
 import com.HealQueue.CLINIC.Entity.ClinicInfo;
@@ -11,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
@@ -48,25 +46,21 @@ public class ClinicController {
 //        }
 //    }
 
-
-//    @GetMapping("/clinicData/{id}")
-//    public ResponseEntity<ClinicResponse> getDataById(@PathVariable long id){
-//        clinicInfo = clinicService.findById(id);
-//        if(clinicInfo == null){
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-//        }
-//        return ResponseEntity.ok(new ClinicResponse(clinicInfo));
-//    }
+    @PatchMapping("/updateClinic")
+    public ResponseEntity<ClinicResponseDTO> updateClinic(@RequestBody ClinicRequestDTO dto){
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        ClinicResponseDTO clinicResponse = clinicService.updateClinic(dto,username);
+        //need to added error handling
+        return new ResponseEntity<>(clinicResponse,HttpStatus.OK);
+    }
 
     //Add the data to show logged in clinic because the above method will show by id
     //which is not safe
-
     @GetMapping("/me")
     public ResponseEntity<ClinicResponseDTO> loggedInClinic(){
         String userName = SecurityContextHolder.getContext().getAuthentication().getName();
         System.out.println("User Name is "+userName);
         ClinicResponseDTO clinicResponse = clinicService.findByUserName(userName);
-
         return new ResponseEntity<>(clinicResponse, HttpStatus.OK);
     }
 
@@ -81,8 +75,7 @@ public class ClinicController {
 
     @GetMapping("/queue/get")
     public ResponseEntity<List<AppointmentBooking>> getQueue(){
-        //Instead of using this optional we should use the security context to get the
-        //current logged in clinic so that only that clinic will get their queue
+        //This is not returning proper json data
         String userName = SecurityContextHolder.getContext().getAuthentication().getName();
         ClinicResponseDTO clinicResponseDTO = clinicService.findByUserName(userName);
         Long clinicId = clinicResponseDTO.getProfileId();
@@ -102,32 +95,26 @@ public class ClinicController {
         AppointmentBooking appointmentBooking = queueService.getQueueById(appointmentId, clinicId)
                 .orElseThrow(()->new RuntimeException("No appointment exists"));
         return new ResponseEntity<>(appointmentBooking, HttpStatus.OK);
-        
     }
 
-    //Need to add the clinic id also as it cannot identify which clinic queue is this
-    //it will show all the clinics queue
+    //Remove this and change it with booked, completed so that
+    //delete option should not be their and we can store its history
     @DeleteMapping("/delete/queue/{id}")
     public ResponseEntity<?> deleteQueue(@PathVariable long id) {
-
         String username = SecurityContextHolder
                 .getContext()
                 .getAuthentication()
                 .getName();
-
         ClinicResponseDTO clinicResponseDTO = clinicService
                 .findByUserName(username);
         Long clinicId = clinicResponseDTO.getProfileId();
 
         boolean deleted = queueService.deleteQueueByClinic(id, clinicId);
-
         if (!deleted) {
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
                     .body("Queue not found for your clinic");
         }
-
         return ResponseEntity.ok("Deleted");
     }
-
 }

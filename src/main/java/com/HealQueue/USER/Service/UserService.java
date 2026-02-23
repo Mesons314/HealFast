@@ -139,4 +139,8 @@ public class UserService {
         return repo.save(userInfo);
 
     }
+
+    public boolean userExists(String username) {
+        return authRepo.existsByUserName(username);
+    }
 }

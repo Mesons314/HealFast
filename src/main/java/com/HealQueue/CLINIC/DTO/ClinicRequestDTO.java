@@ -1,8 +1,5 @@
 package com.HealQueue.CLINIC.DTO;
 
-import com.HealQueue.Auth.Entity.UserAccountData;
-import jakarta.persistence.Column;
-
 public class ClinicRequestDTO {
 
     private String address;

@@ -14,6 +14,15 @@ public class UserResponseDTO{
     private String dob;
 
     public UserResponseDTO(UserInfo userInfo) {
+        this.firstName = userInfo.getFirstName();
+        this.dob = userInfo.getDob();
+        this.userName = userInfo.getUserAccountData().getUserName();
+        this.email = userInfo.getUserAccountData().getEmail();
+        this.phoneNo = userInfo.getUserAccountData().getPhoneNo();
+        this.profileId = userInfo.getId();
+        this.address = userInfo.getAddress();
+        this.lastName = userInfo.getLastName();
+        this.gender = userInfo.getGender();
     }
 
     public UserResponseDTO(){

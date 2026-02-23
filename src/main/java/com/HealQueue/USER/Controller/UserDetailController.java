@@ -39,24 +39,30 @@ public class UserDetailController {
 
     //In this i need to set the clinic id from the backend only it should not come from the frontend
     @PostMapping("/queue/add/{clinicId}")
-    public ResponseEntity<?> addQueue(@RequestBody AppointmentBooking appointmentBooking, @PathVariable long clinicId){
-        try {
-            appointmentBooking = queueService.add(appointmentBooking,clinicId);
-            return new ResponseEntity<>(appointmentBooking, HttpStatus.OK);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+    public ResponseEntity<?> addAppointment(@RequestBody AppointmentBooking appointmentBooking, @PathVariable long clinicId){
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        boolean isExists = userService.userExists(username);
+        Long userId = userService.findByUserName(username).getProfileId();
+        if(!isExists){
+            throw new RuntimeException("User Does Not exists");
         }
+        appointmentBooking = queueService.add(appointmentBooking,clinicId,userId);
+        return new ResponseEntity<>(appointmentBooking, HttpStatus.OK);
     }
 
     @PostMapping("/addUser")
     public ResponseEntity<UserResponseDTO> addUser(@RequestBody UserRequestDTO userRequestDTO){
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         UserInfo userInfo = userService.addUserData(userRequestDTO,username);
+        System.out.println(userInfo.getUserAccountData());
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(new UserResponseDTO(userInfo));
     }
 
+    //In this when I am deleting appointment of different
+    //user it showing successfully deleted instead of showing error
+    //but the appointment is never deleted
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteAppointment(@PathVariable long id){
         //In this i want to differentiate between the clinics so that user should add

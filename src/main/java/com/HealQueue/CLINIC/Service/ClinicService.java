@@ -1,39 +1,23 @@
 package com.HealQueue.CLINIC.Service;
 
-import com.HealQueue.Auth.DTO.AuthRequest;
 import com.HealQueue.Auth.Entity.UserAccountData;
 import com.HealQueue.Auth.Repository.AuthRepo;
-import com.HealQueue.Auth.Service.JWTService;
 import com.HealQueue.CLINIC.DTO.ClinicRequestDTO;
 import com.HealQueue.CLINIC.DTO.ClinicResponseDTO;
 import com.HealQueue.CLINIC.Entity.ClinicInfo;
-import com.HealQueue.Auth.Entity.UserPrincipal;
 import com.HealQueue.CLINIC.Repository.ClinicRepo;
-import com.google.maps.errors.ApiException;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.BeanWrapper;
+import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.beans.PropertyDescriptor;
+import java.util.*;
 
 @Service
 public class ClinicService {
 
-//    @Autowired
-//    private final PasswordEncoder passwordEncoder;
-//
-//    @Autowired
-//    private final JWTService jwtService;
-//
-//    @Autowired
-//    private final AuthenticationManager authManager;
     @Autowired
     private final ClinicRepo repo;
 
@@ -47,6 +31,7 @@ public class ClinicService {
 //    @Autowired
 //    private GoogleMapService googleMapService;
 
+    //need to correct this
     public List<ClinicInfo> getClinic() {
         return repo.findAll();
     }
@@ -72,6 +57,7 @@ public class ClinicService {
         if (accountData.getClinicInfo() != null) {
             throw new RuntimeException("Clinic profile already exists");
         }
+        //need to do the same as updateClinic
         ClinicInfo clinic = new ClinicInfo();
         clinic.setAddress(dto.getAddress());
         clinic.setGraduationDegree(dto.getGraduationDegree());
@@ -89,5 +75,39 @@ public class ClinicService {
 
     private ClinicResponseDTO mapToDTO(ClinicInfo clinicInfo){
         return new ClinicResponseDTO(clinicInfo);
+    }
+
+    public ClinicResponseDTO updateClinic(ClinicRequestDTO dto, String username) {
+        UserAccountData userAccountData = authRepo.findByUserName(username)
+                .orElseThrow(()->new RuntimeException("No user found"));
+        ClinicInfo clinic = userAccountData.getClinicInfo();
+        /**
+        instead of doing this for every method we will use
+        beansUtil which is a wrapper class which internally do the same thing
+        of mapping like this
+        if(dto.getClinicName() != null){
+         clinic.setClinicName(dto.getClinicName());
+        }
+        if(dto.getClinicPhoneNo() != null){
+         clinic.setClinicPhoneNo(dto.getClinicPhoneNo());
+        }
+        **/
+         BeanUtils.copyProperties(dto,clinic,getNullProperties(dto));
+        ClinicInfo updatedClinic = repo.save(clinic);
+        return new ClinicResponseDTO(updatedClinic);
+    }
+
+    private String[] getNullProperties(Object source){
+        final BeanWrapper src = new BeanWrapperImpl(source);
+        PropertyDescriptor[] pds = src.getPropertyDescriptors();
+        Set<String> emptyNames = new HashSet<>();
+
+        for(PropertyDescriptor pd: pds){
+            Object srcValue = src.getPropertyValue(pd.getName());
+            if(srcValue == null){
+                emptyNames.add(pd.getName());
+            }
+        }
+        return emptyNames.toArray(new String[0]);
     }
 }

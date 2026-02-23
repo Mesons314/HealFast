@@ -3,17 +3,13 @@ package com.HealQueue.Auth.Controller;
 import com.HealQueue.Auth.DTO.AuthRequest;
 import com.HealQueue.Auth.DTO.RefreshRequest;
 import com.HealQueue.Auth.Entity.UserAccountData;
-import com.HealQueue.USER.Repository.UserRepo;
 import com.HealQueue.Auth.Service.AuthService;
-import com.HealQueue.CLINIC.Service.ClinicService;
 import com.HealQueue.Auth.Service.JWTService;
-import com.HealQueue.USER.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.Map;
 
 @RestController

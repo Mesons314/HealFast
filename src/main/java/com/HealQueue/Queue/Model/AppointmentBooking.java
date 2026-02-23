@@ -14,20 +14,15 @@ public class AppointmentBooking {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    /* -------------------- RELATIONS -------------------- */
-
     // Who booked the appointment
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
     private UserInfo user;
 
     // Which clinic appointment belongs to
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "clinic_id", nullable = false)
+    @JoinColumn(name = "clinic_id")
     private ClinicInfo clinic;
-
-    /* -------------------- PATIENT DETAILS -------------------- */
 
     private String patientName;
     private String patientAge;
@@ -37,21 +32,14 @@ public class AppointmentBooking {
     private Integer patientNo;
     private Long duration;
 
-    @Column(nullable = false, updatable = false)
     private LocalDateTime registeredAt;
-
-    /* -------------------- AUTO TIMESTAMP -------------------- */
 
     @PrePersist
     protected void onCreate() {
         this.registeredAt = LocalDateTime.now();
     }
 
-    /* -------------------- CONSTRUCTORS -------------------- */
-
     public AppointmentBooking() {}
-
-    /* -------------------- GETTERS & SETTERS -------------------- */
 
     public Long getId() {
         return id;

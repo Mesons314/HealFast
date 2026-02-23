@@ -11,10 +11,10 @@ public class TimeService {
 //currently the data is being added for the entire appointment table
     //not just for the clinic specific so i need to fix that
     public Long getQueueTime(Long size){
-        if (size < 3) {
+        if (size < 2) {
             return 0L;
         }
-        return 10L * size - 30;
+        return 10L*(size-1);
     }
 
 }
