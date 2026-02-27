@@ -25,7 +25,7 @@ public class getClinicController {
     private GoogleMapService googleMapService;
 
     @GetMapping("/getClinic")
-    public ResponseEntity<List<ClinicInfo>> getClinicList(){
+    public ResponseEntity<List<ClinicResponseDTO>> getClinicList(){
         return new ResponseEntity<>(clinicService.getClinic(), HttpStatus.OK);
     }
 

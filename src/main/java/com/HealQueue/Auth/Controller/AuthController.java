@@ -35,7 +35,7 @@ public class AuthController {
             throw new RuntimeException(e.getMessage());
         }
     }
-
+    
     @PostMapping("/login/user")
     public Map<String,String> loginUser(@RequestBody AuthRequest authRequest){
         try {

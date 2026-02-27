@@ -92,29 +92,40 @@ public class ClinicController {
         ClinicResponseDTO clinicResponseDTO = clinicService
                 .findByUserName(username);
         Long clinicId = clinicResponseDTO.getProfileId();
-        AppointmentBooking appointmentBooking = queueService.getQueueById(appointmentId, clinicId)
-                .orElseThrow(()->new RuntimeException("No appointment exists"));
+        AppointmentBooking appointmentBooking = queueService.getQueueByClinicId(appointmentId, clinicId);
         return new ResponseEntity<>(appointmentBooking, HttpStatus.OK);
     }
 
-    //Remove this and change it with booked, completed so that
-    //delete option should not be their and we can store its history
-    @DeleteMapping("/delete/queue/{id}")
-    public ResponseEntity<?> deleteQueue(@PathVariable long id) {
-        String username = SecurityContextHolder
-                .getContext()
-                .getAuthentication()
-                .getName();
+
+    @PatchMapping("/appointments/{id}")
+    public ResponseEntity<AppointmentBooking> updateAppointment(@PathVariable long id){
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
         ClinicResponseDTO clinicResponseDTO = clinicService
                 .findByUserName(username);
         Long clinicId = clinicResponseDTO.getProfileId();
-
-        boolean deleted = queueService.deleteQueueByClinic(id, clinicId);
-        if (!deleted) {
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .body("Queue not found for your clinic");
-        }
-        return ResponseEntity.ok("Deleted");
+        AppointmentBooking updated = queueService.updateAppointment(id,clinicId);
+        return new ResponseEntity<>(updated,HttpStatus.OK);
     }
+
+
+    //Remove this and change it with booked, completed so that
+    //delete option should not be their and we can store its history
+//    @DeleteMapping("/delete/queue/{id}")
+//    public ResponseEntity<?> deleteQueue(@PathVariable long id) {
+//        String username = SecurityContextHolder
+//                .getContext()
+//                .getAuthentication()
+//                .getName();
+//        ClinicResponseDTO clinicResponseDTO = clinicService
+//                .findByUserName(username);
+//        Long clinicId = clinicResponseDTO.getProfileId();
+//
+//        boolean deleted = queueService.deleteQueueByClinic(id, clinicId);
+//        if (!deleted) {
+//            return ResponseEntity
+//                    .status(HttpStatus.NOT_FOUND)
+//                    .body("Queue not found for your clinic");
+//        }
+//        return ResponseEntity.ok("Deleted");
+//    }
 }

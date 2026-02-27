@@ -32,8 +32,14 @@ public class ClinicService {
 //    private GoogleMapService googleMapService;
 
     //need to correct this
-    public List<ClinicInfo> getClinic() {
-        return repo.findAll();
+    public List<ClinicResponseDTO> getClinic() {
+        List<ClinicInfo> clinicInfo = repo.findAll();
+        List<ClinicResponseDTO> dto = new ArrayList<>();
+        for(ClinicInfo cf: clinicInfo){
+            ClinicResponseDTO dto1 = new ClinicResponseDTO(cf);
+            dto.add(dto1);
+        }
+        return dto;
     }
 
     public ClinicResponseDTO findById(long id) {

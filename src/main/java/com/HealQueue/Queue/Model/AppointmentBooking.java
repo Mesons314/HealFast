@@ -28,11 +28,11 @@ public class AppointmentBooking {
     private String patientAge;
     private String patientGender;
     private String mobileNo;
-
-    private Integer patientNo;
-    private Long duration;
-
     private LocalDateTime registeredAt;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private StatusEnum status;
 
     @PrePersist
     protected void onCreate() {
@@ -59,6 +59,14 @@ public class AppointmentBooking {
 
     public void setClinic(ClinicInfo clinic) {
         this.clinic = clinic;
+    }
+
+    public StatusEnum getStatus() {
+        return status;
+    }
+
+    public void setStatus(StatusEnum status) {
+        this.status = status;
     }
 
     public String getPatientName() {
@@ -91,22 +99,6 @@ public class AppointmentBooking {
 
     public void setMobileNo(String mobileNo) {
         this.mobileNo = mobileNo;
-    }
-
-    public Integer getPatientNo() {
-        return patientNo;
-    }
-
-    public void setPatientNo(Integer patientNo) {
-        this.patientNo = patientNo;
-    }
-
-    public Long getDuration() {
-        return duration;
-    }
-
-    public void setDuration(Long duration) {
-        this.duration = duration;
     }
 
     public LocalDateTime getRegisteredAt() {
