@@ -4,6 +4,7 @@ import com.HealQueue.Auth.DTO.AuthRequest;
 import com.HealQueue.Auth.Entity.UserAccountData;
 import com.HealQueue.Auth.Entity.UserPrincipal;
 import com.HealQueue.Auth.Repository.AuthRepo;
+import com.HealQueue.Exceptions.UserNameAlreadyExistsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -39,7 +40,7 @@ public class AuthService {
 
     public UserAccountData registerUser(UserAccountData userAccountData) {
         if(authRepo.existsByUserName(userAccountData.getUserName())){
-            throw new RuntimeException("UserName already exists");
+            throw new UserNameAlreadyExistsException("Username already exists");
         }
         userAccountData.setPassword(passwordEncoder.encode(userAccountData.getPassword()));
         authRepo.save(userAccountData);
@@ -47,16 +48,12 @@ public class AuthService {
     }
 
     public Map<String, String> login(AuthRequest authRequest) {
-        //In this we need to use try and catch
         Authentication authentication = authManager.authenticate(
                 new UsernamePasswordAuthenticationToken(authRequest.getUserName(),authRequest.getPassword())
         );
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        if(authentication.isAuthenticated()){
-            UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
-            return jwtService.generateTokens(userPrincipal);
-        }
-        throw new RuntimeException("Authentication failed");
+        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+        return jwtService.generateTokens(userPrincipal);
     }
 
 }

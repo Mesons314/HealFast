@@ -19,6 +19,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.List;
@@ -50,44 +51,6 @@ public class UserService {
         this.repo = repo;
         this.authRepo = authRepo;
     }
-//
-//    @Autowired
-//    private GoogleMapService googleMapService;
-
-//    public UserService(AuthenticationManager authManager, JWTService jwtService, PasswordEncoder passwordEncoder, UserRepo repo) {
-//        this.authManager = authManager;
-//        this.jwtService = jwtService;
-//        this.passwordEncoder = passwordEncoder;
-//        this.repo = repo;
-//    }
-
-//    public UserInfo registerUser(UserInfo user) throws IOException, InterruptedException, ApiException {
-//        logger.info("");
-//        if(repo.existsByUserName(user.getUserName())){
-//            throw new RuntimeException("User Already exist");
-//        }
-//        user.setPassword(passwordEncoder.encode(user.getPassword()));
-//        return repo.save(user);
-//    }
-//
-//    public Map<String, String> login(AuthRequest request) {
-//        Optional<UserInfo> optionalUser = repo.findByUserName(request.getUserName());
-////        UserInfo userInfo = repo.findByUserName(request.getUserName());
-//        if (optionalUser.isEmpty()) {
-//            throw new RuntimeException("User Does Not Exist");
-//        }
-//
-//        UserInfo userInfo = optionalUser.get();
-//        Authentication authentication = authManager.authenticate(
-//                new UsernamePasswordAuthenticationToken(request.getUserName(), request.getPassword()));
-//        SecurityContextHolder.getContext().setAuthentication(authentication);
-//        if (authentication.isAuthenticated()) {
-//            UserPrincipal userPrincipal = new UserPrincipal(userInfo);
-//            return jwtService.generateTokens(userPrincipal);
-//        }
-//        throw new RuntimeException("Authentication failed");
-//    }
-
 
     public List<UserInfo> getAllUser() {
         return repo.findAll();
@@ -121,6 +84,7 @@ public class UserService {
         return dto;
     }
 
+    @Transactional
     public UserInfo addUserData(UserRequestDTO dto, String username) {
         UserAccountData accountData = authRepo.findByUserName(username)
                 .orElseThrow(()->new RuntimeException("No username exists by this name"));
@@ -135,9 +99,7 @@ public class UserService {
         userInfo.setDob(dto.getDob());
         userInfo.setUserAccountData(accountData);
         accountData.setUserInfo(userInfo);
-
         return repo.save(userInfo);
-
     }
 
     public boolean userExists(String username) {

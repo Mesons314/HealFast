@@ -38,13 +38,18 @@ public interface QueueRepo extends JpaRepository<AppointmentBooking , Long> {
 
     Optional<AppointmentBooking> findByIdAndClinic_Id(long id, Long clinicId);
 
-    @Modifying
     @Transactional
     @Query("SELECT COUNT(a) FROM AppointmentBooking a" +
             " WHERE a.clinic.id = :clinicId" +
             " AND a.registeredAt < :localDateTime" +
             " AND a.status = :statusEnum ")
-    int countByClinicAndTime(@Param("clinicId") long clinicId, @Param("statusEnum") StatusEnum statusEnum,@Param("localDateTime") LocalDateTime localDateTime);
+    int countByClinicAndTime(@Param("clinicId") Long clinicId, @Param("statusEnum") StatusEnum statusEnum,@Param("localDateTime") LocalDateTime localDateTime);
 
-    Optional<AppointmentBooking> findByIdAndUser_Id(long id, Long userId);
+    Optional<AppointmentBooking> findByIdAndUser_Id(Long id, Long userId);
+
+    List<AppointmentBooking> findByClinic_IdAndStatus(Long clinicId, StatusEnum status);
+
+    List<AppointmentBooking> findByClinic_IdAndRegisteredAtBetween(Long clinicId, LocalDateTime startDay, LocalDateTime endDay);
+
+    List<AppointmentBooking> findByUser_Id(Long userId);
 }

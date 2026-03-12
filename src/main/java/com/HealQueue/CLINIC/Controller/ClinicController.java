@@ -4,6 +4,7 @@ import com.HealQueue.CLINIC.DTO.ClinicResponseDTO;
 import com.HealQueue.CLINIC.Entity.ClinicInfo;
 import com.HealQueue.CLINIC.Service.ClinicService;
 import com.HealQueue.Queue.Model.AppointmentBooking;
+import com.HealQueue.Queue.Model.StatusEnum;
 import com.HealQueue.Queue.Service.QueueService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/clinic")
+@RequestMapping("/api/clinic/queue")
 public class ClinicController {
 
     @Autowired
@@ -59,7 +60,6 @@ public class ClinicController {
     @GetMapping("/me")
     public ResponseEntity<ClinicResponseDTO> loggedInClinic(){
         String userName = SecurityContextHolder.getContext().getAuthentication().getName();
-        System.out.println("User Name is "+userName);
         ClinicResponseDTO clinicResponse = clinicService.findByUserName(userName);
         return new ResponseEntity<>(clinicResponse, HttpStatus.OK);
     }
@@ -73,18 +73,33 @@ public class ClinicController {
                 .body(new ClinicResponseDTO(clinicInfo));
     }
 
-    @GetMapping("/queue/get")
-    public ResponseEntity<List<AppointmentBooking>> getQueue(){
-        //This is not returning proper json data
-        String userName = SecurityContextHolder.getContext().getAuthentication().getName();
-        ClinicResponseDTO clinicResponseDTO = clinicService.findByUserName(userName);
+    @GetMapping("/appointments")
+    public ResponseEntity<List<AppointmentBooking>> getBookedStatus(@RequestParam(required = false)StatusEnum status){
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        ClinicResponseDTO clinicResponseDTO = clinicService
+                .findByUserName(username);
         Long clinicId = clinicResponseDTO.getProfileId();
-        List<AppointmentBooking> appointmentBookings = queueService.getAllQueue(clinicId);
-        return new ResponseEntity<>(appointmentBookings,HttpStatus.OK);
+        List<AppointmentBooking> bookedAppointment = queueService.getBookedAppointment(status, clinicId);
+        return new ResponseEntity<>(bookedAppointment, HttpStatus.OK);
     }
 
-    @GetMapping("/queue/get/{appointmentId}")
-    public ResponseEntity<AppointmentBooking> getQueueBYId(@PathVariable int appointmentId){
+    @GetMapping("/appointments/today")
+    public ResponseEntity<List<AppointmentBooking>> getTodayAppointment(){
+        String username = SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getName();
+        ClinicResponseDTO clinicResponseDTO = clinicService
+                .findByUserName(username);
+        Long clinicId = clinicResponseDTO.getProfileId();
+        List<AppointmentBooking> ap = queueService.getTodaysAppointment(clinicId);
+        return new ResponseEntity<>(ap,HttpStatus.OK);
+    }
+
+    //First the appointment is called and then these two are inside that so that we get
+    //the appointments and this will be divided in 2 parts in ui booked and completed
+    @GetMapping("/appointments/{appointmentId}")
+    public ResponseEntity<AppointmentBooking> getQueueBYId(@PathVariable Long appointmentId){
         String username = SecurityContextHolder
                 .getContext()
                 .getAuthentication()
@@ -96,36 +111,24 @@ public class ClinicController {
         return new ResponseEntity<>(appointmentBooking, HttpStatus.OK);
     }
 
-
-    @PatchMapping("/appointments/{id}")
-    public ResponseEntity<AppointmentBooking> updateAppointment(@PathVariable long id){
+    @PatchMapping("/appointments/no_show/{id}")
+    public ResponseEntity<AppointmentBooking> updateAppointmentToNoShow(@PathVariable Long id){
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         ClinicResponseDTO clinicResponseDTO = clinicService
                 .findByUserName(username);
         Long clinicId = clinicResponseDTO.getProfileId();
-        AppointmentBooking updated = queueService.updateAppointment(id,clinicId);
+        AppointmentBooking updated = queueService.noShowUpdate(id,clinicId);
+        return new ResponseEntity<>(updated, HttpStatus.OK);
+    }
+
+    @PatchMapping("/appointments/complete/{id}")
+    public ResponseEntity<AppointmentBooking> updateAppointmentToComplete(@PathVariable Long id){
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        ClinicResponseDTO clinicResponseDTO = clinicService
+                .findByUserName(username);
+        Long clinicId = clinicResponseDTO.getProfileId();
+        AppointmentBooking updated = queueService.appointmentCompleted(id,clinicId);
         return new ResponseEntity<>(updated,HttpStatus.OK);
     }
 
-
-    //Remove this and change it with booked, completed so that
-    //delete option should not be their and we can store its history
-//    @DeleteMapping("/delete/queue/{id}")
-//    public ResponseEntity<?> deleteQueue(@PathVariable long id) {
-//        String username = SecurityContextHolder
-//                .getContext()
-//                .getAuthentication()
-//                .getName();
-//        ClinicResponseDTO clinicResponseDTO = clinicService
-//                .findByUserName(username);
-//        Long clinicId = clinicResponseDTO.getProfileId();
-//
-//        boolean deleted = queueService.deleteQueueByClinic(id, clinicId);
-//        if (!deleted) {
-//            return ResponseEntity
-//                    .status(HttpStatus.NOT_FOUND)
-//                    .body("Queue not found for your clinic");
-//        }
-//        return ResponseEntity.ok("Deleted");
-//    }
 }

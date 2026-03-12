@@ -6,10 +6,12 @@ import com.HealQueue.CLINIC.DTO.ClinicRequestDTO;
 import com.HealQueue.CLINIC.DTO.ClinicResponseDTO;
 import com.HealQueue.CLINIC.Entity.ClinicInfo;
 import com.HealQueue.CLINIC.Repository.ClinicRepo;
+import com.HealQueue.Exceptions.UserNameAlreadyExistsException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.beans.PropertyDescriptor;
@@ -42,26 +44,28 @@ public class ClinicService {
         return dto;
     }
 
-    public ClinicResponseDTO findById(long id) {
-        ClinicInfo clinicInfo = repo.findById(id).orElseThrow(()->new RuntimeException("No clinic exists"));
+    public ClinicResponseDTO findById(Long id) {
+        ClinicInfo clinicInfo = repo.findById(id)
+                .orElseThrow(()->new RuntimeException("No clinic exists"));
         return mapToDTO(clinicInfo);
     }
 
-    public ClinicInfo findByData(long id) {
+    public ClinicInfo findByData(Long id) {
         return repo.findById(id).orElse(null);
     }
     public ClinicResponseDTO findByUserName(String userName) {
-        ClinicInfo clinicInfo = repo.findByUserAccountData_UserName(userName).orElseThrow(()->new RuntimeException("User Does not exists"));
+        ClinicInfo clinicInfo = repo.findByUserAccountData_UserName(userName)
+                .orElseThrow(()->new UsernameNotFoundException("User Does not exists"));
         return mapToDTO(clinicInfo);
     }
 
 
     public ClinicInfo addClinicData(ClinicRequestDTO dto, String userName) {
         UserAccountData accountData = authRepo.findByUserName(userName)
-                .orElseThrow(() -> new RuntimeException("Account not found"));
+                .orElseThrow(() -> new UsernameNotFoundException("Account not found"));
 
         if (accountData.getClinicInfo() != null) {
-            throw new RuntimeException("Clinic profile already exists");
+            throw new UserNameAlreadyExistsException("Clinic profile already exists");
         }
         //need to do the same as updateClinic
         ClinicInfo clinic = new ClinicInfo();
@@ -85,7 +89,7 @@ public class ClinicService {
 
     public ClinicResponseDTO updateClinic(ClinicRequestDTO dto, String username) {
         UserAccountData userAccountData = authRepo.findByUserName(username)
-                .orElseThrow(()->new RuntimeException("No user found"));
+                .orElseThrow(()->new UsernameNotFoundException("No user found"));
         ClinicInfo clinic = userAccountData.getClinicInfo();
         /**
         instead of doing this for every method we will use
@@ -107,7 +111,6 @@ public class ClinicService {
         final BeanWrapper src = new BeanWrapperImpl(source);
         PropertyDescriptor[] pds = src.getPropertyDescriptors();
         Set<String> emptyNames = new HashSet<>();
-
         for(PropertyDescriptor pd: pds){
             Object srcValue = src.getPropertyValue(pd.getName());
             if(srcValue == null){
@@ -115,5 +118,14 @@ public class ClinicService {
             }
         }
         return emptyNames.toArray(new String[0]);
+    }
+
+    public List<ClinicResponseDTO> searchClinic(String query) {
+        List<ClinicInfo> clinicInfos = repo.searchClinicByQuery(query.toLowerCase());
+        List<ClinicResponseDTO> dto = new ArrayList<>();
+        for(ClinicInfo cf : clinicInfos){
+            dto.add(new ClinicResponseDTO(cf));
+        }
+        return dto;
     }
 }

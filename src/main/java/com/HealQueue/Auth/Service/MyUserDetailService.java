@@ -20,7 +20,7 @@ public class MyUserDetailService  implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         UserAccountData userAccountData = authRepo.findByUserName(username)
-                .orElseThrow(() -> new RuntimeException("No Username found"));
+                .orElseThrow(() -> new UsernameNotFoundException("No Username found"));
 
         return new UserPrincipal(userAccountData);
     }

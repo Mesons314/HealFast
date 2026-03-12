@@ -1,6 +1,7 @@
 package com.HealQueue.Auth.Service;
 
 import com.HealQueue.Auth.Entity.UserPrincipal;
+import com.HealQueue.Exceptions.InvalidTokenException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -57,7 +58,7 @@ public class JWTService {
         if (validateToken(refreshToken, userDetails)) {
             return generateToken((UserPrincipal) userDetails, 1000 * 60 * 30); // new access token for 30 minutes
         } else {
-            throw new RuntimeException("Invalid or expired refresh token");
+            throw new InvalidTokenException("Invalid or expired refresh token");
         }
     }
 

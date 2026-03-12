@@ -28,21 +28,13 @@ public class AuthController {
 
     @PostMapping("/register/user")
     public ResponseEntity<?> registerUser(@RequestBody UserAccountData userAccountData){
-        try{
-            userAccountData = authService.registerUser(userAccountData);
-            return new ResponseEntity<>(userAccountData, HttpStatus.OK);
-        }catch(Exception e){
-            throw new RuntimeException(e.getMessage());
-        }
+        userAccountData = authService.registerUser(userAccountData);
+        return new ResponseEntity<>(userAccountData, HttpStatus.OK);
     }
     
     @PostMapping("/login/user")
     public Map<String,String> loginUser(@RequestBody AuthRequest authRequest){
-        try {
-            return authService.login(authRequest);
-        } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
-        }
+        return authService.login(authRequest);
     }
 
     //In this I am passing both types but, I need to pass only refresh so
