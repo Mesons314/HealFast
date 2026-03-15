@@ -35,16 +35,6 @@ public class UserService {
 
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
-//
-//    @Autowired
-//    private final JWTService jwtService;
-//
-//    @Autowired
-//    private final AuthenticationManager authManager;
-//
-//    @Autowired
-//    private final PasswordEncoder passwordEncoder;
-
     @Autowired
     private final UserRepo repo;
 
@@ -113,7 +103,7 @@ public class UserService {
 
         BeanUtils.copyProperties(dto,info,getNullProperties(dto));
         UserInfo updateUser = repo.save(info);
-        return new UserResponseDTO(updateUser);
+        return mapToDTO(updateUser);
     }
 
     private String[] getNullProperties(Object source) {
