@@ -30,4 +30,19 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> invalidToken(InvalidTokenException ex){
         return new ResponseEntity<>(ex.getMessage(),HttpStatus.UNAUTHORIZED);
     }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<?> userNotFound(UserNotFoundException e){
+        return new ResponseEntity<>(e.getMessage(),HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(ClinicNotFoundException.class)
+    public ResponseEntity<?> clinicNotFound(ClinicNotFoundException e){
+        return new ResponseEntity<>(e.getMessage(),HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(AppointmentDoesNotExistsException.class)
+    public ResponseEntity<?> appointmentNotExists(AppointmentDoesNotExistsException e){
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+    }
 }

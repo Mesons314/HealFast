@@ -1,6 +1,7 @@
 package com.HealQueue.USER.Entity;
 
 import com.HealQueue.Auth.Entity.UserAccountData;
+import com.HealQueue.USER.DTO.UserRequestDTO;
 import jakarta.persistence.*;
 
 @Entity
@@ -85,5 +86,6 @@ public class UserInfo {
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
+
 
 }

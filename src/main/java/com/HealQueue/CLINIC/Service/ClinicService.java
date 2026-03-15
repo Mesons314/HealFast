@@ -46,7 +46,7 @@ public class ClinicService {
 
     public ClinicResponseDTO findById(Long id) {
         ClinicInfo clinicInfo = repo.findById(id)
-                .orElseThrow(()->new RuntimeException("No clinic exists"));
+                .orElseThrow(()->new UsernameNotFoundException("No clinic exists"));
         return mapToDTO(clinicInfo);
     }
 

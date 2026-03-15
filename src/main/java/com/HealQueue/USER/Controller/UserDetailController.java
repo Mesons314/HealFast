@@ -80,11 +80,7 @@ public class UserDetailController {
     @PostMapping("/queue/add/{clinicId}")
     public ResponseEntity<?> addAppointment(@RequestBody AppointmentBooking appointmentBooking, @PathVariable long clinicId){
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        boolean isExists = userService.userExists(username);
         Long userId = userService.findByUserName(username).getProfileId();
-        if(!isExists){
-            throw new RuntimeException("User Does Not exists");
-        }
         appointmentBooking = queueService.addAppointment(appointmentBooking,clinicId,userId);
         return new ResponseEntity<>(appointmentBooking, HttpStatus.OK);
     }
@@ -99,6 +95,13 @@ public class UserDetailController {
                 .body(new UserResponseDTO(userInfo));
     }
 
+    @PatchMapping("/update")
+    public ResponseEntity<UserResponseDTO> updateUser(@RequestBody UserRequestDTO userRequestDTO){
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        UserResponseDTO dto = userService.updateUser(userRequestDTO,username);
+        return new ResponseEntity<>(dto,HttpStatus.OK);
+    }
+
     @GetMapping("/appointments")
     public ResponseEntity<List<AppointmentBooking>> getMyAppointments(){
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -111,10 +114,6 @@ public class UserDetailController {
     @GetMapping("/appointment/{id}")
     public ResponseEntity<QueueResponseDTO> getAppointment(@PathVariable long id){
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        boolean isExists = userService.userExists(username);
-        if(!isExists){
-            throw new RuntimeException("User Does Not exists");
-        }
         Long userId = userService.findByUserName(username).getProfileId();
         AppointmentBooking ap = queueService.getQueueByUserId(id,userId);
         QueueResponseDTO dto = queueService.getTimeAndStatus(ap);
@@ -125,9 +124,6 @@ public class UserDetailController {
     public ResponseEntity<List<ClinicResponseDTO>> clinicSearch(@RequestParam("query") String query){
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         UserResponseDTO dto = userService.findByUserName(username);
-        if(dto == null){
-            throw new RuntimeException("No user found");
-        }
         List<ClinicResponseDTO> clinicDtoList = clinicService.searchClinic(query.trim());
         return new ResponseEntity<>(clinicDtoList,HttpStatus.OK);
     }
@@ -136,9 +132,6 @@ public class UserDetailController {
     public ResponseEntity<?> cancelAppointment(@PathVariable Long id){
         String userName = SecurityContextHolder.getContext().getAuthentication().getName();
         UserResponseDTO dto = userService.findByUserName(userName);
-        if(dto == null){
-            throw new RuntimeException("No user found");
-        }
         AppointmentBooking ap = queueService.getMyAppointment(id,dto.getProfileId());
         queueService.cancelAppointment(ap);
         return ResponseEntity.ok("Appointment canceled");

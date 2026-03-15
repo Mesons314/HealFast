@@ -2,6 +2,9 @@ package com.HealQueue.Queue.Service;
 
 import com.HealQueue.CLINIC.Entity.ClinicInfo;
 import com.HealQueue.CLINIC.Repository.ClinicRepo;
+import com.HealQueue.Exceptions.AppointmentDoesNotExistsException;
+import com.HealQueue.Exceptions.ClinicNotFoundException;
+import com.HealQueue.Exceptions.UserNotFoundException;
 import com.HealQueue.Queue.DTO.QueueResponseDTO;
 import com.HealQueue.Queue.Model.AppointmentBooking;
 import com.HealQueue.Queue.Model.StatusEnum;
@@ -32,9 +35,9 @@ public class QueueService {
     @Transactional
     public AppointmentBooking addAppointment(AppointmentBooking appointmentBooking, long clinicId, Long userId) {
         ClinicInfo clinic = clinicRepo.findByClinicIdForUpdate(clinicId)
-                .orElseThrow(() -> new RuntimeException("Clinic not found"));
+                .orElseThrow(() -> new ClinicNotFoundException("Clinic not found"));
         UserInfo user = userRepo.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
         appointmentBooking.setClinic(clinic);
         appointmentBooking.setUser(user);
         appointmentBooking.setStatus(StatusEnum.BOOKED);
@@ -44,12 +47,12 @@ public class QueueService {
 
     public AppointmentBooking getQueueByClinicId(Long id, Long clinicId) {
         return repo.findByIdAndClinic_Id(id , clinicId).orElseThrow(
-                ()-> new RuntimeException("No appointment found for specific clinic")
+                ()-> new AppointmentDoesNotExistsException("No appointment found for specific clinic")
         );
     }
     public AppointmentBooking getQueueByUserId(Long id, Long userId) {
         return repo.findByIdAndUser_Id(id ,userId).orElseThrow(
-                ()-> new RuntimeException("No appointment found for specific clinic")
+                ()-> new AppointmentDoesNotExistsException("No appointment found for specific clinic")
         );
     }
 
@@ -60,7 +63,7 @@ public class QueueService {
     public AppointmentBooking appointmentCompleted(Long id, Long clinicId) {
         AppointmentBooking getAppointment = getQueueByClinicId(id,clinicId);
         if(getAppointment == null){
-            throw new RuntimeException("No appointment found");
+            throw new AppointmentDoesNotExistsException("No appointment found");
         }
         getAppointment.setStatus(StatusEnum.COMPLETED);
         repo.save(getAppointment);
@@ -80,7 +83,7 @@ public class QueueService {
     public AppointmentBooking noShowUpdate(Long id, Long clinicId) {
         AppointmentBooking getAppointment = getQueueByClinicId(id,clinicId);
         if(getAppointment == null){
-            throw new RuntimeException("No appointment found");
+            throw new AppointmentDoesNotExistsException("No appointment found");
         }
         getAppointment.setStatus(StatusEnum.NO_SHOW);
         repo.save(getAppointment);
@@ -106,7 +109,7 @@ public class QueueService {
     public AppointmentBooking getMyAppointment(Long id, Long profileId) {
         AppointmentBooking ap = repo.findById(id).orElseThrow();
         if(!ap.getUser().getId().equals(profileId)){
-            throw new RuntimeException("This appointment does not belong to the user");
+            throw new AppointmentDoesNotExistsException("This appointment does not belong to the user");
         }
         return ap;
     }
@@ -114,6 +117,5 @@ public class QueueService {
     public void cancelAppointment(AppointmentBooking ap) {
         ap.setStatus(StatusEnum.CANCELED);
         repo.save(ap);
-        return;
     }
 }
